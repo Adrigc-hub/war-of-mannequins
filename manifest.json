@@ -1,10 +1,22 @@
 {
-  "name": "War of Mannequins",
-  "short_name": "Mannequins",
-  "start_url": "./index.html",
+  "name": "Mannequin Multiverse: Sorcerer Edition",
+  "short_name": "MannequinVM",
+  "description": "Multiuniverso interactivo de Realidad Virtual y Hechizos.",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0a051b",
-  "theme_color": "#0a051b",
-  "orientation": "landscape"
+  "background_color": "#010103",
+  "theme_color": "#ffaa00",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "https://cdn.glitch.global/60c49742-df21-4d37-8ff7-1a4df8fa1112/icon-192.png?v=1710000000000",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.glitch.global/60c49742-df21-4d37-8ff7-1a4df8fa1112/icon-512.png?v=1710000000000",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
-
