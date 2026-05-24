@@ -1,0 +1,10 @@
+{
+  "name": "War of Mannequins",
+  "short_name": "Mannequins",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a051b",
+  "theme_color": "#0a051b",
+  "orientation": "landscape"
+}
+
