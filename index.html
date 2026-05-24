@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cosmic Echoes: Mannequin VR</title>
+    
+    <!-- Configuración para convertir el juego en App Instalable (PWA) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvc21pYyBFY2hvZXM6IE1hbm5lcXVpbiBVRiIsCiAgInNob3J0X25hbWUiOiAiQ29zbWljTWFubmVxdWluIiwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMDUxYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwYTA1MWIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsPGV2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJz48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAnJSBmaWxsPScjMGEwNTFiJy8+PGNpcmNsZSBjeD0nMjU2JyBjeT0nMjU2JyByPScyMDAnIGZpbGw9J3VybCgjZ2FsYXh5KScgb3BhY2l0eT0nMC42Jy8+PHBhdGggZD0nTTM4MCAxMDBMMzkwIDEyMEwzNzAgMTUweiBNMTUwIDQwMEwxNjAgNDMwaC0zMHonIGZpbGw9JyN3aHQnLz48Y2lyY2xlIGN4PScxMDAnIGN5PScxNTAnIHI9JzInIGZpbGw9JyN3aHQnLz48Y2lyY2xlIGN4PSc0MDAnIGN5PSczNTAnIHI9JzEuNScgZmlsbD0nd2h0Jy8+PHJlY3QgeD0nNDAwJyB5PScyMDAnIHdpZHRoPSczMCcgaGVpZ2h0PScxMDAnIHJ4PScxNScgZmlsbD0nIzhjOGM4YycvPjxjaXJjbGUgY3g9JzQxNScgY3k9JzE4MCcgcj0nMTUnIGZpbGw9JyM4YzhjOGMnLz48cGF0aCBkPSdNMjAgMjU2aDIwME00MCAyNTBoMTgwTTgwIDI2MmgxNDAnIHN0cm9rZT0nI2N5YW4nIHN0cm9rZS13aWR0aD0nNCcgc3Ryb2tlLWRhc2hhcnJheT0nMTAgNScvPjxwYXRoIGQ9J00yMjAgMjQ2bDMwIDEwIDIwIDEwLTIwIDEwLTMwIDEwLTV6JyBmaWxsPScjZmZhYTAwJy8+PC9zdmc+IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+
+    <!-- Motor Gráfico WebXR Universal -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        #html-ui { position: absolute; z-index: 10; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; font-family: sans-serif; color: white; }
+        .hud-element { padding: 20px; font-size: 20px; text-shadow: 2px 2px 4px #000; pointer-events: auto; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- HUD del Juego -->
+    <div id="html-ui">
+        <div class="hud-element" id="connection-status">Detectando conexión...</div>
+        <div class="hud-element" id="spell-slots">Hechizos: 3/3 restantes</div>
+    </div>
+
+    <a-scene xr-mode-ui="XRMode: xr">
+        <a-assets>
+            <!-- Textura de respaldo integrada en código (Procedural/Color) para evitar caídas sin internet -->
+            <canvas id="fallback-galaxy" width="256" height="256"></canvas>
+        </a-assets>
+
+        <!-- CAMARA Y CONTROLES -->
+        <a-entity id="rig" position="0 0 0">
+            <a-camera id="camera" look-controls wasd-controls="acceleration: 20">
+                <a-cursor id="mouse-cursor" raycaster="objects: .clickable" material="color: cyan; shader: flat" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"></a-cursor>
+            </a-camera>
+            <a-entity oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
+            <a-entity id="right-hand" oculus-touch-controls="hand: right" laser-controls="hand: right" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
+        </a-entity>
+
+        <!-- ENTORNO: MENÚ PRINCIPAL -->
+        <a-entity id="main-menu">
+            <a-sky id="menu-sky" color="#0a051b"></a-sky>
+            <a-entity id="ton618-visual" geometry="primitive: sphere; radius: 15" material="color: #000; emissive: #331155" position="0 20 -40" visible="false"></a-entity>
+
+            <a-text id="menu-title" value="COSMIC MANNEQUIN" align="center" position="0 3.8 -4" width="8" color="#fff"></a-text>
+            <a-text id="network-indicator-3d" value="MODO: ONLINE" align="center" position="0 3.3 -4" width="4" color="#00ff00"></a-text>
+
+            <!-- Botones Modos de Juego -->
+            <a-entity id="btn-mode1" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #222" position="-1.3 2.4 -3">
+                <a-text value="Modo Evasión" align="center" position="0 0 0.05" width="4"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-mode2" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #222" position="1.3 2.4 -3">
+                <a-text value="Modo Entorno" align="center" position="0 0 0.05" width="4"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-solitario" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #115511" position="-1.3 1.7 -3">
+                <a-text value="Solitario (Offline)" align="center" position="0 0 0.05" width="4"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-online" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #0055aa" position="1.3 1.7 -3">
+                <a-text id="txt-online" value="Buscar Partida Online" align="center" position="0 0 0.05" width="3.5"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-mode3" class="clickable hidden" geometry="primitive: plane; width: 3; height: 0.5" material="color: #660000" position="0 1 -3">
+                <a-text value="MODO TON 618 (SECRETO)" align="center" position="0 0 0.05" width="4"></a-text>
+            </a-entity>
+            
+            <a-entity id="btn-tutorial" class="clickable" geometry="primitive: plane; width: 2; height: 0.4" material="color: #444" position="0 3.0 -3">
+                <a-text value="Tutorial" align="center" position="0 0 0.05" width="3.5"></a-text>
+            </a-entity>
+
+            <!-- BOTÓN INSTALAR (Ubicado físicamente atrás en el menú 3D) -->
+            <a-entity id="btn-instalar" class="clickable hidden" geometry="primitive: box; width: 1.5; height: 0.5; depth: 0.2" material="color: #ffaa00" position="0 1.5 3" rotation="0 180 0">
+                <a-text value="INSTALAR JUEGO\n(En tu dispositivo)" align="center" position="0 0 0.11" width="3.5" color="#000"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <!-- MUNDO DEL JUEGO -->
+        <a-entity id="game-world" visible="false">
+            <a-grid id="floor" material="color: #111"></a-grid>
+            <a-light type="ambient" color="#222"></a-light>
+            <a-light id="player-flashlight" type="spot" color="#fff" intensity="1.5" position="0 2 0" angle="30"></a-light>
+            <a-text id="game-text" value="Cargando..." align="center" position="0 2.5 -5" width="6"></a-text>
+            <a-entity id="wand-holster" class="clickable" geometry="primitive: cylinder; radius: 0.03; height: 0.4" material="color: #8b5a2b" position="0.3 0.8 -0.2"></a-entity>
+        </a-entity>
+    </a-scene>
+
+    <script>
+        let spellsLeft = 3;
+        let isOnline = navigator.onLine;
+        let deferredPrompt;
+
+        // Dibujar textura espacial matemática por si juegas sin internet
+        const canvas = document.getElementById('fallback-galaxy');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#0a051b'; ctx.fillRect(0, 0, 256, 256);
+        for(let i=0; i<100; i++) { ctx.fillStyle = '#fff'; ctx.fillRect(Math.random()*256, Math.random()*256, 2, 2); }
+
+        // 1. Detección automática de Internet
+        function updateNetworkStatus() {
+            isOnline = navigator.onLine;
+            const statusUI = document.getElementById('connection-status');
+            const status3D = document.getElementById('network-indicator-3d');
+            const btnOnline = document.getElementById('btn-online');
+            const txtOnline = document.getElementById('txt-online');
+
+            if (isOnline) {
+                statusUI.innerText = "Conectado - Modo Online Disponible";
+                statusUI.style.color = "lightgreen";
+                status3D.setAttribute('value', 'MODO: ONLINE');
+                status3D.setAttribute('color', '#00ff00');
+                btnOnline.setAttribute('material', 'color', '#0055aa');
+                txtOnline.setAttribute('value', 'Buscar Partida Online');
+            } else {
+                statusUI.innerText = "Sin Internet - Solo Modo Solitario";
+                statusUI.style.color = "orange";
+                status3D.setAttribute('value', 'MODO: OFFLINE');
+                status3D.setAttribute('color', '#ffaa00');
+                btnOnline.setAttribute('material', 'color', '#333333'); // Botón desactivado visualmente
+                txtOnline.setAttribute('value', 'Online (Bloqueado)');
+            }
+        }
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+
+        // Al iniciar partida online, si no hay internet redirige a solitario automáticamente
+        document.getElementById('btn-online').addEventListener('click', () => {
+            if (!isOnline) {
+                alert("¡No tienes conexión! Iniciando Modo Solitario automáticamente...");
+                startMatch('solitario');
+            } else {
+                alert("Buscando servidores en la nube...");
+                startMatch('online');
+            }
+        });
+
+        document.getElementById('btn-solitario').addEventListener('click', () => { startMatch('solitario'); });
+
+        function startMatch(type) {
+            document.getElementById('main-menu').setAttribute('visible', 'false');
+            document.getElementById('game-world').setAttribute('visible', 'true');
+            const text = document.getElementById('game-text');
+            if (type === 'solitario') {
+                text.setAttribute('value', "Modo Solitario Local\nLos Maniquíes están acechando.");
+            } else {
+                text.setAttribute('value', "Conectado a la Sesión Online Multijugador");
+            }
+        }
+
+        // 2. Sistema del Botón de Instalación (Atrás tuyo en el espacio 3D)
+        const btnInstalar = document.getElementById('btn-instalar');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Evita que Android/PC abran su propio menú por defecto
+            e.preventDefault();
+            deferredPrompt = e;
+            // Muestra el botón dorado que está a la espalda del jugador
+            btnInstalar.classList.remove('hidden');
+        });
+
+        btnInstalar.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('El usuario instaló Cosmic Echoes.');
+                    btnInstalar.classList.add('hidden'); // Desaparece tras instalar
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // Ocultar si ya está instalada la app en formato independiente
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            btnInstalar.classList.add('hidden');
+        }
+
+        // 3. Probabilidad TON 618 (1 de 5)
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNetworkStatus();
+            if (Math.floor(Math.random() * 5) + 1 === 5) {
+                const sky = document.querySelector('#menu-sky');
+                sky.setAttribute('src', '#fallback-galaxy');
+                document.querySelector('#menu-title').setAttribute('value', 'TON 618 DETECTED');
+                document.querySelector('#menu-title').setAttribute('color', '#ff0055');
+                document.querySelector('#btn-mode3').classList.remove('hidden');
+                document.querySelector('#ton618-visual').setAttribute('visible', 'true');
+            }
+        });
+    </script>
+</body>
+</html>
