@@ -11,7 +11,7 @@
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     
     <style>
-        body { margin: 0; overflow: hidden; background-color: #010103; font-family: sans-serif; user-select: none; touch-action: none; }
+        body { margin: 0; overflow: hidden; background-color: #050811; font-family: sans-serif; user-select: none; touch-action: none; }
         
         /* Capas de Interfaz de Usuario */
         #html-ui { position: absolute; z-index: 1000; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
@@ -20,7 +20,6 @@
         .hud-card { background: rgba(3, 3, 8, 0.96); padding: 8px 12px; border-radius: 6px; border: 1px solid #ffaa00; color: white; font-weight: bold; font-size: 11px; box-shadow: 0 0 10px rgba(255,170,0,0.2); }
         .hud-saves { background: rgba(5, 5, 10, 0.85); padding: 10px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); color: white; font-weight: bold; font-size: 14px; }
         
-        /* FIJADO DE BOTÓN DE INSTALACIÓN PRIORITARIO */
         #install-bar { position: absolute; top: 12px; left: 12px; z-index: 999999; pointer-events: auto; }
         #btn-pwa-install { background: #ffaa00; color: black; font-weight: bold; border: 2px solid #fff; padding: 10px 16px; border-radius: 8px; cursor: pointer; box-shadow: 0 0 15px #ffaa00; font-size: 11px; }
         
@@ -99,26 +98,25 @@
         </div>
     </div>
 
-    <a-scene fog="type: exponential; color: #000000; density: 0.05" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+    <a-scene fog="type: exponential; color: #070a14; density: 0.03" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
         
         <a-entity id="rig" position="0 0 0">
             <a-camera id="camera" look-controls="enabled: true" wasd-controls="acceleration: 45">
                 <a-entity geometry="primitive: ring; radiusInner: 0.002; radiusOuter: 0.0035" material="color: #ffaa00; shader: flat" position="0 0 -1"></a-entity>
-                <a-entity id="hand-anchor" position="0.3 -0.25 -0.6"></a-entity>
+                <a-entity id="hand-anchor" position="0.3 -0.35 -0.8"></a-entity>
             </a-camera>
             
             <a-entity oculus-touch-controls="hand: left" id="leftHandVR"></a-entity>
-            <a-entity oculus-touch-controls="hand: right" id="rightHandVR" laser-controls="hand: right" raycaster="objects: .clickable; far: 30; interval: 50" material="color: #ff0044"></a-entity>
+            <a-entity oculus-touch-controls="hand: right" id="rightHandVR" laser-controls="hand: right" raycaster="objects: .clickable; far: 30; interval: 50" material="color: #00ffff"></a-entity>
         </a-entity>
 
         <a-entity id="main-menu" position="0 1.6 -3" rotation="0 0 0" visible="false">
             <a-sky color="#020104"></a-sky>
-            <a-entity id="ton618-sphere" geometry="primitive: sphere; radius: 10" material="color: #000; shader: flat" position="0 12 -30" visible="false"></a-entity>
 
             <a-entity position="-2.8 0 0.5" rotation="0 30 0">
-                <a-plane width="2.2" height="2.5" material="color: #0d1117; opacity: 0.95; side: double; border: 1px solid #1f242c">
+                <a-plane width="2.2" height="2.5" material="color: #0d1117; opacity: 0.95; side: double">
                     <a-text value="CHARACTER SKIN" align="center" position="0 1.0 0.01" width="4.5" color="#ffaa00"></a-text>
-                    <a-plane class="clickable" width="1.8" height="1.6" position="0 -0.1 0.02" material="color: #161b22" onclick="alert('Skin Premium de Maniquí Equipada')">
+                    <a-plane class="clickable" width="1.8" height="1.6" position="0 -0.1 0.02" material="color: #161b22" onclick="playLaserSound(600, 0.1); alert('Skin Premium de Maniquí Equipada')">
                         <a-text value="UNIQUE CHARACTER SKINS\n\nLIMITED TIME OFFER\nNOW $4.99" align="center" position="0 0 0.02" width="3.5" color="#ffffff"></a-text>
                     </a-plane>
                 </a-plane>
@@ -128,18 +126,18 @@
                 <a-plane width="3.2" height="2.5" material="color: #0d1117; opacity: 0.95; side: double">
                     <a-text value="PREMIUM UPGRADE" align="center" position="0 1.0 0.01" width="5" color="#00ffff"></a-text>
                     
-                    <a-entity class="clickable" geometry="primitive: box; width: 2.8; height: 0.4; depth: 0.05" material="color: #ffaa00" position="0 0.4 0.03" onclick="loadSelectedMap('tutorial')">
+                    <a-entity class="clickable" geometry="primitive: box; width: 2.8; height: 0.4; depth: 0.05" material="color: #ffaa00" position="0 0.4 0.03" onclick="playLaserSound(500, 0.15); loadSelectedMap('tutorial')">
                         <a-text value="VOLVER A TUTORIAL AUTOMATICO" align="center" position="0 0 0.03" width="4" color="#000000"></a-text>
                     </a-entity>
 
-                    <a-entity class="clickable" geometry="primitive: box; width: 2.8; height: 0.5; depth: 0.05" material="color: #21262d" position="0 -0.2 0.03" onclick="loadSelectedMap('additional')">
+                    <a-entity class="clickable" geometry="primitive: box; width: 2.8; height: 0.5; depth: 0.05" material="color: #21262d" position="0 -0.2 0.03" onclick="playLaserSound(500, 0.15); loadSelectedMap('additional')">
                         <a-text value="8 ADDITIONAL MAPS\nTest your skills in Premium game modes\nNOW $4.99" align="center" position="0 0 0.03" width="3.5" color="#ffffff"></a-text>
                     </a-entity>
 
-                    <a-entity class="clickable" geometry="primitive: box; width: 1.3; height: 0.4; depth: 0.05" material="color: #161b22" position="-0.75 -0.8 0.03" onclick="loadSelectedMap('rotating')">
+                    <a-entity class="clickable" geometry="primitive: box; width: 1.3; height: 0.4; depth: 0.05" material="color: #161b22" position="-0.75 -0.8 0.03" onclick="playLaserSound(450, 0.1); loadSelectedMap('rotating')">
                         <a-text value="ROTATING GAMES" align="center" position="0 0 0.03" width="3" color="#ffffff"></a-text>
                     </a-entity>
-                    <a-entity class="clickable" geometry="primitive: box; width: 1.3; height: 0.4; depth: 0.05" material="color: #161b22" position="0.75 -0.8 0.03" onclick="loadSelectedMap('custom')">
+                    <a-entity class="clickable" geometry="primitive: box; width: 1.3; height: 0.4; depth: 0.05" material="color: #161b22" position="0.75 -0.8 0.03" onclick="playLaserSound(450, 0.1); loadSelectedMap('custom')">
                         <a-text value="CUSTOM GAMES" align="center" position="0 0 0.03" width="3" color="#ffffff"></a-text>
                     </a-entity>
                 </a-plane>
@@ -148,52 +146,84 @@
             <a-entity position="2.8 0 0.5" rotation="0 -30 0">
                 <a-plane width="2.2" height="2.5" material="color: #0d1117; opacity: 0.95; side: double">
                     <a-text value="SOCIAL ROOM" align="center" position="0 1.0 0.01" width="4.5" color="#00ffff"></a-text>
-                    <a-plane class="clickable" width="1.8" height="1.6" position="0 -0.1 0.02" material="color: #10141b" onclick="loadSelectedMap('social')">
-                        <a-text value="SOCIAL LOBBY\n\nKING OF THE CROWN\n\nConéctate con otros Hechiceros" align="center" position="0 0 0.03" width="3.2" color="#ffffff"></a-text>
+                    <a-plane class="clickable" width="1.8" height="1.6" position="0 -0.1 0.02" material="color: #10141b" onclick="playLaserSound(500, 0.15); loadSelectedMap('social')">
+                        <a-text value="SOCIAL LOBBY\n\nKING OF THE CROWN\n\nConéctate con otros Hechiceros" align="center" position="0 0 0.02" width="3.2" color="#ffffff"></a-text>
                     </a-plane>
                 </a-plane>
-            </a-entity>
-
-            <a-entity id="btn-bossfight" class="clickable" geometry="primitive: box; width: 3; height: 0.4; depth: 0.1" material="color: #600; metalness: 0.7" position="0 -1.5 0" visible="false" onclick="loadSelectedMap('bossfight')">
-                <a-text value="BOSS FIGHT EXTRA" align="center" position="0 0 0.06" width="4.5" color="#fff"></a-text>
             </a-entity>
         </a-entity>
 
         <a-entity id="game-world" visible="true">
-            <a-sky color="#020205"></a-sky>
-            <a-grid material="color: #0b0c10; repeat: 60 60; roughness: 0.2"></a-grid>
-            <a-light type="ambient" color="#222"></a-light>
-            <a-light id="flashlight" type="spot" color="#ddf" intensity="2.5" position="0 3 0" angle="22" penumbra="0.5"></a-light>
+            <a-sky color="#03060f"></a-sky>
+            <a-grid material="color: #090e1a; repeat: 40 40; roughness: 0.3"></a-grid>
+            <a-light type="ambient" color="#334466"></a-light>
+            <a-light type="directional" intensity="1.2" position="2 5 3" color="#99ccff"></a-light>
+
+            <a-ring radius-inner="1.4" radius-outer="1.5" color="#00ffaa" rotation="-90 0 0" position="0 0.02 0" material="shader: flat; side: double"></a-ring>
 
             <a-entity id="map-structures"></a-entity>
             <a-entity id="active-spells-container"></a-entity>
 
-            <a-entity id="boss-container" position="0 4 -25" visible="false">
-                <a-sphere radius="4" material="color: #000; roughness: 0.1; metalness: 0.9"></a-sphere>
-                <a-ring id="boss-eye" radius-inner="2" radius-outer="2.8" material="color: #ff0044; side: double; shader: flat"></a-ring>
-            </a-entity>
-
             <a-text id="tutorial-text" value="Mapa: Estacion Ecos Cosmicos\nUsa los contenedores y pilares para cubrirte." align="center" position="0 2.5 -5" width="4.5" color="#ffffff"></a-text>
             
-            <a-entity id="portal-to-menu" class="clickable" geometry="primitive: cylinder; radius: 0.8; height: 0.1" material="color: #00ffff; emissive: #00ffff; emissiveIntensity: 2" position="0 0.05 -8" visible="true" onclick="exitToMainMenu()">
+            <a-entity id="portal-to-menu" class="clickable" geometry="primitive: cylinder; radius: 0.8; height: 0.1" material="color: #00ffff; emissive: #00ffff; emissiveIntensity: 1.5" position="0 0.05 -8" onclick="playLaserSound(300, 0.3); exitToMainMenu()">
                 <a-text value="TIEMPO NORMAL / IR AL MENU" align="center" rotation="-90 0 0" position="0 0.1 0" width="3" color="#fff"></a-text>
             </a-entity>
         </a-entity>
     </a-scene>
 
     <script>
+        // --- AUDIO ENGINE (Sintetizadores para Replicar y Mejorar el Sonido Láser del Video) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playLaserSound(startFreq, duration) {
+            try {
+                let osc = audioCtx.createOscillator();
+                let gainNode = audioCtx.createGain();
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + duration);
+                
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) { console.log("Audio Bloqueado por Interacción"); }
+        }
+
+        function playExplosionSound() {
+            try {
+                let osc = audioCtx.createOscillator();
+                let gainNode = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(10, audioCtx.currentTime + 0.5);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+            } catch(e) {}
+        }
+
+        // --- SISTEMA INTERNO DE VARIABLES Y HECHIZOS ---
         let selectedWoW = [];
         let timeSlowed = false;
         let currentMode = 'tutorial'; 
-        let playerHP = 100;
-        let eyeOpen = false;
-        let tutorialStep = 0;
-
         let lastBlueClickTime = 0;
+        
         let redChargeTimer = null;
         let redChargeDuration = 0;
         let isHoldingRed = false;
         let isHoldingBlueForPurple = false;
+        
+        // CONTROL DE DISPARO DEL PÚRPURA (Freno para Evitar los 50 Orbes en la Cara)
+        let lastPurpleTime = 0;
+        const PURPLE_COOLDOWN = 3000; // 3 segundos enteros de recarga forzada
 
         const rig = document.getElementById('rig');
         const camera = document.getElementById('camera');
@@ -206,62 +236,40 @@
         
         let moveX = 0, moveZ = 0;
         let isDraggingJoystick = false;
-
         let rotY = 0; let rotX = 0;
         let isMovingCamera = false;
         let prevTouchX = 0; let prevTouchY = 0;
         let cameraSens = parseFloat(slider ? slider.value : 0.22);
 
-        if(slider) {
-            slider.addEventListener('input', () => { cameraSens = parseFloat(slider.value); });
-        }
+        if(slider) { slider.addEventListener('input', () => { cameraSens = parseFloat(slider.value); }); }
 
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         if (isMobile) document.getElementById('mobile-controls').style.display = 'flex';
 
-        // CONSTRUCTOR MAESTRO DEL ANDROIDE ORIGINAL DE MANNEQUIN
+        // CONSTRUCTOR DEL ANDROIDE / ENEMY MANNEQUIN EN HD
         function buildMannequinMesh(parentEntity) {
             let wrapper = document.createElement('a-entity');
-
             let head = document.createElement('a-sphere');
-            head.setAttribute('radius', '0.16'); head.setAttribute('color', '#d2d5da'); head.setAttribute('position', '0 1.75 0');
-            head.setAttribute('material', 'metalness:0.95; roughness:0.08');
+            head.setAttribute('radius', '0.16'); head.setAttribute('color', '#c4c8d0'); head.setAttribute('position', '0 1.75 0');
+            head.setAttribute('material', 'metalness:0.9; roughness:0.1');
 
             let visor = document.createElement('a-box');
-            visor.setAttribute('width', '0.24'); visor.setAttribute('height', '0.045'); visor.setAttribute('depth', '0.09');
-            visor.setAttribute('position', '0 1.76 -0.13'); visor.setAttribute('material', 'color:#00ffff; emissive:#00ffff; emissiveIntensity: 3; shader: flat');
+            visor.setAttribute('width', '0.24'); visor.setAttribute('height', '0.04'); visor.setAttribute('depth', '0.08');
+            visor.setAttribute('position', '0 1.76 -0.12'); visor.setAttribute('material', 'color:#00ffff; shader: flat');
 
             let chest = document.createElement('a-box');
-            chest.setAttribute('width', '0.48'); chest.setAttribute('height', '0.68'); chest.setAttribute('depth', '0.24');
-            chest.setAttribute('position', '0 1.2 0'); chest.setAttribute('material', 'color:#9298a6; metalness:0.9; roughness:0.12');
-
-            let leftArm = document.createElement('a-cylinder');
-            leftArm.setAttribute('radius', '0.04'); leftArm.setAttribute('height', '0.62'); leftArm.setAttribute('position', '-0.32 1.2 0');
-            leftArm.setAttribute('material', 'color:#1f2022; metalness: 0.8; roughness: 0.2');
-
-            let rightArm = document.createElement('a-cylinder');
-            rightArm.setAttribute('radius', '0.04'); rightArm.setAttribute('height', '0.62'); rightArm.setAttribute('position', '0.32 1.2 0');
-            rightArm.setAttribute('material', 'color:#1f2022; metalness: 0.8; roughness: 0.2');
+            chest.setAttribute('width', '0.46'); chest.setAttribute('height', '0.66'); chest.setAttribute('depth', '0.22');
+            chest.setAttribute('position', '0 1.2 0'); chest.setAttribute('material', 'color:#7a818e; metalness:0.8; roughness:0.2');
 
             let stand = document.createElement('a-cylinder');
-            stand.setAttribute('radius', '0.07'); stand.setAttribute('height', '0.88'); stand.setAttribute('position', '0 0.44 0');
-            stand.setAttribute('material', 'color:#121315; metalness:0.98; roughness: 0.05');
+            stand.setAttribute('radius', '0.06'); stand.setAttribute('height', '0.86'); stand.setAttribute('position', '0 0.43 0');
+            stand.setAttribute('material', 'color:#111215; metalness:0.9');
 
-            wrapper.appendChild(head); wrapper.appendChild(visor); wrapper.appendChild(chest);
-            wrapper.appendChild(leftArm); wrapper.appendChild(rightArm); wrapper.appendChild(stand);
+            wrapper.appendChild(head); wrapper.appendChild(visor); wrapper.appendChild(chest); wrapper.appendChild(stand);
             parentEntity.appendChild(wrapper);
         }
 
-        // DISPARO AUTOMÁTICO DE MAPA TUTORIAL AL ARRANCAR NATIVO
-        window.addEventListener('load', () => {
-            loadSelectedMap('tutorial'); 
-            
-            const dice = Math.floor(Math.random() * 5) + 1;
-            if (dice === 5) {
-                if(document.getElementById('ton618-sphere')) document.getElementById('ton618-sphere').setAttribute('visible', 'true');
-                if(document.getElementById('btn-bossfight')) document.getElementById('btn-bossfight').setAttribute('visible', 'true');
-            }
-        });
+        window.addEventListener('load', () => { loadSelectedMap('tutorial'); });
 
         function exitToMainMenu() {
             currentMode = 'menu';
@@ -275,51 +283,44 @@
             currentMode = mode;
             document.getElementById('main-menu').setAttribute('visible', 'false');
             document.getElementById('game-world').setAttribute('visible', 'true');
-            
             structures.innerHTML = ''; 
 
-            // Generar los bloques geométricos estructurales para cobertura
-            createWall(structures, "-3 1.5 -6", "1.5 3 1.5", "#1c2128");
-            createWall(structures, "3 1.5 -8", "1.2 3 1.2", "#1c2128");
-            createWall(structures, "0 2 -12", "4 4 1", "#0d1117");
+            // Generación de Bloques de Cobertura Exactos del Video de Oculus
+            createWall(structures, "-2.5 1.5 -5.5", "1.6 3 1.6", "#11161d");
+            createWall(structures, "2.5 1.5 -7.5", "1.2 3 1.2", "#11161d");
+            createWall(structures, "0 2 -11", "5 4 0.8", "#080b11");
 
             if (mode === 'tutorial') {
                 document.getElementById('tutorial-text').setAttribute('value', "Mapa: Estacion Ecos Cosmicos\nUsa los contenedores y pilares para cubrirte.");
-                
                 const dummy = document.createElement('a-entity');
-                dummy.setAttribute('position', "0 0 -5");
+                dummy.setAttribute('position', "0 0 -4.5");
                 buildMannequinMesh(dummy);
                 structures.appendChild(dummy);
-
             } else if (mode === 'additional') {
                 document.getElementById('tutorial-text').setAttribute('value', "Área Expandida: 8 Additional Maps Activado.");
                 for(let i=0; i<6; i++) {
                     const enemyEntity = document.createElement('a-entity');
-                    enemyEntity.setAttribute('position', `${(Math.random() * 10) - 5} 0 -${7 + (i * 3.5)}`);
+                    enemyEntity.setAttribute('position', `${(Math.random() * 8) - 4} 0 -${6 + (i * 3)}`);
                     buildMannequinMesh(enemyEntity);
                     structures.appendChild(enemyEntity);
                 }
             } else if (mode === 'social') {
-                document.getElementById('tutorial-text').setAttribute('value', "Social Lobby (King of the Crown)\nZona de Interconexión.");
-            } else if (mode === 'bossfight') {
-                document.getElementById('boss-container').setAttribute('visible', 'true');
-                startBossLogic();
+                document.getElementById('tutorial-text').setAttribute('value', "Social Lobby (King of the Crown)\nZona de Conexión Segura.");
             } else {
                 document.getElementById('tutorial-text').setAttribute('value', `Instancia: ${mode.toUpperCase()}`);
             }
         }
 
-        // ================= GESTIÓN LÓGICA DE HECHIZOS COMBINADOS JJK =================
+        // ================= CONJURACIÓN EXCLUSIVA DE HECHIZOS =================
 
         function startRedCharge() {
             if(currentMode === 'menu') return;
-            isHoldingRed = true;
-            redChargeDuration = 0;
+            isHoldingRed = true; redChargeDuration = 0;
             document.getElementById('combo-status').innerText = "CARGANDO VECTOR ROJO...";
             
             let chargeSphere = document.createElement('a-sphere');
             chargeSphere.setAttribute('id', 'visual-red-charge');
-            chargeSphere.setAttribute('radius', '0.1');
+            chargeSphere.setAttribute('radius', '0.08');
             chargeSphere.setAttribute('color', '#ff0033');
             chargeSphere.setAttribute('material', 'emissive: #ff0033; emissiveIntensity: 2');
             handAnchor.appendChild(chargeSphere);
@@ -329,9 +330,10 @@
                 let vRed = document.getElementById('visual-red-charge');
                 if(vRed) {
                     let currentRad = parseFloat(vRed.getAttribute('radius'));
-                    if(currentRad < 0.25) vRed.setAttribute('radius', currentRad + 0.01);
+                    if(currentRad < 0.22) vRed.setAttribute('radius', currentRad + 0.015);
                 }
                 
+                // Disparador coordinado si se mantiene presionado el alterno
                 if (isHoldingRed && isHoldingBlueForPurple) {
                     executePurpleHollow();
                     endRedCharge();
@@ -341,18 +343,19 @@
 
         function endRedCharge() {
             if(!isHoldingRed) return;
-            isHoldingRed = false;
-            clearInterval(redChargeTimer);
+            isHoldingRed = false; clearInterval(redChargeTimer);
             
             let vRed = document.getElementById('visual-red-charge');
             if(vRed) vRed.remove();
 
-            if (redChargeDuration >= 2000) {
-                document.getElementById('combo-status').innerText = "¡ROJO: EXPLOSIÓN INTERNA!";
-                spawnBlastRing('#ff0033', 3, 400);
+            if (redChargeDuration >= 1800) {
+                document.getElementById('combo-status').innerText = "¡ROJO: EXPLOSIÓN MÁXIMA!";
+                playExplosionSound();
+                spawnBlastRing('#ff0033', 3.5, 400);
             } else {
                 document.getElementById('combo-status').innerText = "CONJURO: ROJO EMITIDO";
-                spawnMagicSphere('#ff0033', 0.28, 950, 'red-projectile');
+                playLaserSound(800, 0.2);
+                spawnMagicSphere('#ff0033', 0.22, 850, 'red-projectile');
             }
         }
 
@@ -360,19 +363,29 @@
             if(currentMode === 'menu') return;
             let now = Date.now();
             if (now - lastBlueClickTime < 350) {
-                document.getElementById('combo-status').innerText = "¡AZUL MAX: ATRACCIÓN LAPLACE!";
-                spawnStaticVortex('#0044ff', 5, 5000);
+                document.getElementById('combo-status').innerText = "¡AZUL MAX: CONVERGENCIA!";
+                playLaserSound(300, 0.4);
+                spawnStaticVortex('#0044ff', 4.5, 4000);
             } else {
                 document.getElementById('combo-status').innerText = "CONJURO: AZUL EMITIDO";
-                spawnMagicSphere('#0044ff', 0.28, 950, 'blue-projectile');
+                playLaserSound(900, 0.15);
+                spawnMagicSphere('#0044ff', 0.22, 850, 'blue-projectile');
             }
             lastBlueClickTime = now;
         }
 
         function executePurpleHollow() {
+            let ahora = Date.now();
+            // Freno absoluto: Si no ha pasado el cooldown, bloquea la ejecución para que no aparezca en tu cara
+            if (ahora - lastPurpleTime < PURPLE_COOLDOWN) return;
+            
+            lastPurpleTime = ahora;
             document.getElementById('combo-status').innerText = "¡TÉCNICA IMAGINARIA: PÚRPURA!";
             isHoldingBlueForPurple = false;
-            spawnMagicSphere('#9900ff', 1.8, 350, 'purple-ultimate');
+            
+            playExplosionSound();
+            // Desplazado hacia adelante en Z (-2.5) para que inicie al frente de la cámara y no dentro de ella
+            spawnMagicSphere('#9900ff', 1.4, 400, 'purple-ultimate', -2.5);
         }
 
         function checkOculusGestoPurple() {
@@ -385,7 +398,8 @@
             if(!pLeft || !pRight) return;
 
             let dist = Math.sqrt(Math.pow(pLeft.x-pRight.x,2) + Math.pow(pLeft.y-pRight.y,2) + Math.pow(pLeft.z-pRight.z,2));
-            if (dist < 0.30) { executePurpleHollow(); }
+            // Activación equilibrada por proximidad de mandos Oculus
+            if (dist < 0.25) { executePurpleHollow(); }
         }
 
         setInterval(() => {
@@ -393,40 +407,29 @@
                 checkOculusGestoPurple();
                 checkVortexCollisions();
             }
-        }, 150);
+        }, 200);
 
-        window.addEventListener('keydown', (e) => {
-            let key = e.key.toLowerCase();
-            if(key === 'e') { if(!isHoldingRed) startRedCharge(); }
-            if(key === 'r') { isHoldingBlueForPurple = true; triggerBlueSpell(); }
-        });
-        window.addEventListener('keyup', (e) => {
-            let key = e.key.toLowerCase();
-            if(key === 'e') endRedCharge();
-            if(key === 'r') isHoldingBlueForPurple = false;
-        });
-
-        // ================= INSTANCIACIÓN DE ENTIDADES DINÁMICAS =================
-
-        function spawnMagicSphere(color, radius, speed, className) {
+        // MAPEO COMBINADO DE EMISIÓN DE VECTORES
+        function spawnMagicSphere(color, radius, speed, className, offsetZ = -1.5) {
             const sphere = document.createElement('a-sphere');
             sphere.setAttribute('class', className);
             sphere.setAttribute('radius', radius);
             sphere.setAttribute('color', color);
-            sphere.setAttribute('material', `emissive: ${color}; emissiveIntensity: 1.8; metalness: 0.2; roughness: 0.1`);
+            sphere.setAttribute('material', `emissive: ${color}; emissiveIntensity: 1.8; roughness: 0.2`);
 
             let playerPos = rig.getAttribute('position');
             let currentRot = camera.getAttribute('rotation');
             let angleRad = currentRot.y * (Math.PI / 180);
             let pitchRad = currentRot.x * (Math.PI / 180);
 
-            let startX = playerPos.x - Math.sin(angleRad) * 1.2;
-            let startY = 1.3 - Math.sin(pitchRad) * 1.2;
-            let startZ = playerPos.z - Math.cos(angleRad) * 1.2;
+            // Se calcula la posición de salida aplicando el offsetZ para que no colisione con el visor
+            let startX = playerPos.x - Math.sin(angleRad) * Math.abs(offsetZ);
+            let startY = 1.4 - Math.sin(pitchRad) * Math.abs(offsetZ);
+            let startZ = playerPos.z - Math.cos(angleRad) * Math.abs(offsetZ);
 
-            let targetX = playerPos.x - Math.sin(angleRad) * 45;
-            let targetY = 1.3 - Math.sin(pitchRad) * 45;
-            let targetZ = playerPos.z - Math.cos(angleRad) * 45;
+            let targetX = playerPos.x - Math.sin(angleRad) * 40;
+            let targetY = 1.4 - Math.sin(pitchRad) * 40;
+            let targetZ = playerPos.z - Math.cos(angleRad) * 40;
 
             sphere.setAttribute('position', `${startX} ${startY} ${startZ}`);
             sphere.setAttribute('animation', `property: position; from: ${startX} ${startY} ${startZ}; to: ${targetX} ${targetY} ${targetZ}; dur: ${speed}; easing: linear`);
@@ -440,24 +443,17 @@
             vortex.setAttribute('class', 'static-blue-vortex');
             
             let core = document.createElement('a-sphere');
-            core.setAttribute('radius', '1.2');
-            core.setAttribute('color', color);
-            core.setAttribute('material', `emissive: ${color}; emissiveIntensity: 3; transparent: true; opacity: 0.8`);
-            
-            let ring = document.createElement('a-ring');
-            ring.setAttribute('radius-inner', '4.8'); ring.setAttribute('radius-outer', '5.0');
-            ring.setAttribute('color', '#00ffff'); ring.setAttribute('rotation', '-90 0 0');
-            ring.setAttribute('material', 'shader: flat; side: double');
-
-            vortex.appendChild(core); vortex.appendChild(ring);
+            core.setAttribute('radius', '1.0'); core.setAttribute('color', color);
+            core.setAttribute('material', `emissive: ${color}; emissiveIntensity: 2.5; transparent: true; opacity: 0.8`);
+            vortex.appendChild(core);
 
             let playerPos = rig.getAttribute('position');
             let currentRot = camera.getAttribute('rotation');
             let angleRad = currentRot.y * (Math.PI / 180);
             
-            let spawnX = playerPos.x - Math.sin(angleRad) * 6;
-            let spawnZ = playerPos.z - Math.cos(angleRad) * 6;
-            vortex.setAttribute('position', `${spawnX} 1.5 ${spawnZ}`);
+            let spawnX = playerPos.x - Math.sin(angleRad) * 5.5;
+            let spawnZ = playerPos.z - Math.cos(angleRad) * 5.5;
+            vortex.setAttribute('position', `${spawnX} 1.4 ${spawnZ}`);
 
             activeSpells.appendChild(vortex);
             setTimeout(() => { if(vortex) vortex.remove(); }, duration);
@@ -489,16 +485,17 @@
                     if(!vPos || !pPos) return;
 
                     let dist = Math.sqrt(Math.pow(vPos.x-pPos.x,2)+Math.pow(vPos.y-pPos.y,2)+Math.pow(vPos.z-pPos.z,2));
-                    if(dist < 1.8) {
+                    if(dist < 1.6) {
                         proj.remove(); vortex.remove();
-                        document.getElementById('combo-status').innerText = "¡COLISIÓN: HOLLOW NUKE ATÓMICO!";
-                        spawnBlastRing('#ffffff', 12, 600);
+                        document.getElementById('combo-status').innerText = "¡COLISIÓN ATÓMICA DE VECTORES!";
+                        playExplosionSound();
+                        spawnBlastRing('#ffffff', 10, 500);
                     }
                 });
             });
         }
 
-        // ================= ADAPTACIONES SINTONIZADOR WAR OF WIZARDS (WoW) =================
+        // ================= CONFIGURADOR WAR OF WIZARDS (WoW) =================
         function openWandMenu() { document.getElementById('wow-menu').style.display = 'flex'; }
         
         function selectWoWSpell(name) {
@@ -517,7 +514,7 @@
         function confirmWoWSpells() {
             if(selectedWoW.length !== 3) return;
             document.getElementById('wow-menu').style.display = 'none';
-            document.getElementById('btn-wand').innerText = "Wand Activa";
+            document.getElementById('btn-wand').innerText = "Wand Sintonizada";
 
             const container = document.getElementById('wow-cast-buttons');
             container.innerHTML = ''; container.classList.remove('hidden');
@@ -528,22 +525,21 @@
                 btn.innerText = spell;
                 
                 btn.onclick = () => {
-                    if(spell === 'Fuego') spawnMagicSphere('#ff6600', 0.32, 800, 'wow-fire');
-                    if(spell === 'Rayo') spawnMagicSphere('#ffff00', 0.12, 400, 'wow-bolt');
-                    if(spell === 'Escarcha') spawnMagicSphere('#00ffff', 0.25, 1100, 'wow-frost');
-                    if(spell === 'Arena') spawnMagicSphere('#c2b280', 0.40, 1300, 'wow-sand');
+                    if(spell === 'Fuego') { playLaserSound(650, 0.2); spawnMagicSphere('#ff6600', 0.25, 750, 'wow-fire'); }
+                    if(spell === 'Rayo') { playLaserSound(950, 0.1); spawnMagicSphere('#ffff00', 0.10, 350, 'wow-bolt'); }
+                    if(spell === 'Escarcha') { playLaserSound(550, 0.25); spawnMagicSphere('#00ffff', 0.20, 1000, 'wow-frost'); }
+                    if(spell === 'Arena') { playLaserSound(400, 0.3); spawnMagicSphere('#c2b280', 0.35, 1200, 'wow-sand'); }
                 };
                 container.appendChild(btn);
             });
         }
 
-        // MOTOR JOYSTICK MÓVIL
+        // CONTROL JOYSTICK MÓVIL
         if(isMobile) {
             boundary.addEventListener('touchstart', (e) => { e.stopPropagation(); isDraggingJoystick = true; updateJoystick(e.touches[0]); });
             window.addEventListener('touchmove', (e) => { if (isDraggingJoystick) { e.stopPropagation(); updateJoystick(e.touches[0]); } });
             window.addEventListener('touchend', () => {
-                isDraggingJoystick = false;
-                knob.style.top = '32px'; knob.style.left = '32px';
+                isDraggingJoystick = false; knob.style.top = '32px'; knob.style.left = '32px';
                 moveX = 0; moveZ = 0;
             });
         }
@@ -574,7 +570,6 @@
             }
         }, 20);
 
-        // ROTACIÓN TÁCTIL MÓVIL
         window.addEventListener('touchstart', (e) => {
             if (!isMobile) return;
             if (e.touches[0].clientX > window.innerWidth / 2 || currentMode === 'menu') { isMovingCamera = true; prevTouchX = e.touches[0].clientX; prevTouchY = e.touches[0].clientY; }
@@ -595,21 +590,26 @@
             const w = document.createElement('a-box');
             w.setAttribute('position', pos);
             w.setAttribute('geometry', `width: ${size.split(' ')[0]}; height: ${size.split(' ')[1]}; depth: ${size.split(' ')[2]}`);
-            w.setAttribute('material', `color: ${color}; roughness: 0.3; metalness: 0.5`);
+            w.setAttribute('material', `color: ${color}; roughness: 0.4; metalness: 0.4`);
             parent.appendChild(w);
         }
 
         function triggerTimeSlow() { if (!timeSlowed) { timeSlowed = true; setTimeout(() => { timeSlowed = false; }, 5000); } }
 
-        function startBossLogic() {
-            const eye = document.getElementById('boss-eye');
-            setInterval(() => { if (currentMode !== 'bossfight') return; eyeOpen = !eyeOpen; eye.setAttribute('material', 'color', eyeOpen ? '#ff0044' : '#080002'); }, 3000);
-        }
+        window.addEventListener('keydown', (e) => {
+            let key = e.key.toLowerCase();
+            if(key === 'e' && !isHoldingRed) startRedCharge();
+            if(key === 'r') { isHoldingBlueForPurple = true; triggerBlueSpell(); }
+        });
+        window.addEventListener('keyup', (e) => {
+            let key = e.key.toLowerCase();
+            if(key === 'e') endRedCharge();
+            if(key === 'r') isHoldingBlueForPurple = false;
+        });
 
         document.getElementById('btn-pwa-install').addEventListener('click', () => {
-            alert("SISTEMA DE DESPLIEGUE PWA:\n\n- Oculus VR / PC: Pulsa el icono de la pantalla con una flecha en tu barra de direcciones.\n- Celular: Despliega el menú del navegador y pulsa 'Instalar aplicación'.");
+            alert("SISTEMA DE DESPLIEGUE PWA:\n\n- Oculus VR / PC: Pulsa el icono de la pantalla con una fletcha en tu barra de direcciones.\n- Celular: Despliega el menú del navegador y pulsa 'Instalar aplicación'.");
         });
     </script>
 </body>
 </html>
-
