@@ -1,109 +1,172 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Cosmic Echoes: Mannequin VR</title>
     
-    <!-- Configuración para convertir el juego en App Instalable (PWA) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvc21pYyBFY2hvZXM6IE1hbm5lcXVpbiBVRiIsCiAgInNob3J0X25hbWUiOiAiQ29zbWljTWFubmVxdWluIiwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMDUxYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwYTA1MWIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsPGV2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJz48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAnJSBmaWxsPScjMGEwNTFiJy8+PGNpcmNsZSBjeD0nMjU2JyBjeT0nMjU2JyByPScyMDAnIGZpbGw9J3VybCgjZ2FsYXh5KScgb3BhY2l0eT0nMC42Jy8+PHBhdGggZD0nTTM4MCAxMDBMMzkwIDEyMEwzNzAgMTUweiBNMTUwIDQwMEwxNjAgNDMwaC0zMHonIGZpbGw9JyN3aHQnLz48Y2lyY2xlIGN4PScxMDAnIGN5PScxNTAnIHI9JzInIGZpbGw9JyN3aHQnLz48Y2lyY2xlIGN4PSc0MDAnIGN5PSczNTAnIHI9JzEuNScgZmlsbD0nd2h0Jy8+PHJlY3QgeD0nNDAwJyB5PScyMDAnIHdpZHRoPSczMCcgaGVpZ2h0PScxMDAnIHJ4PScxNScgZmlsbD0nIzhjOGM4YycvPjxjaXJjbGUgY3g9JzQxNScgY3k9JzE4MCcgcj0nMTUnIGZpbGw9JyM4YzhjOGMnLz48cGF0aCBkPSdNMjAgMjU2aDIwME00MCAyNTBoMTgwTTgwIDI2MmgxNDAnIHN0cm9rZT0nI2N5YW4nIHN0cm9rZS13aWR0aD0nNCcgc3Ryb2tlLWRhc2hhcnJheT0nMTAgNScvPjxwYXRoIGQ9J00yMjAgMjQ2bDMwIDEwIDIwIDEwLTIwIDEwLTMwIDEwLTV6JyBmaWxsPScjZmZhYTAwJy8+PC9zdmc+IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvc21pYyBFY2hvZXM6IE1hbm5lcXVpbiBVRiIsCiAgInNob3J0X25hbWUiOiAiQ29zbWljTWFubmVxdWluIiwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMDUxYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwYTA1MWIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsPGV2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJz48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAnJSBmaWxsPScjMGEwNTFiJy8+PGNpcmNsZSBjeD0nMjU2JyBjeT0nMjU2JyByPScyMDAnIGZpbGw9J3VybCgjZ2FsYXh5KScgb3BhY2l0eT0nMC42Jy8+PHBhdGggZD0nTTM4MCAxMDBMMzkwIDEyMEwzNzAgMTUweiBNMTUwIDQwMEwxNjAgNDMwaC0zMHonIGZpbGw9JyN3aHQnLz48Y2lyY2xlIGN4PScxMDAnIGN5PScxNTAnIHI9JzInIGZpbGw9JyN3aHQnLz48Y2lyY2xlIGN4PSc0MDAnIGN5PSczNTAnIHI9JzEuNScgZmlsbD0nd2h0Jy8+PHJlY3QgeD0nNDAwJyB5PScyMDAnIHdpZHRoPSczMCcgaGVpZ2h0PScxMDAnIHJ4PScxNScgZmlsbD0nIzhjOGM4YycvPjxjaXJjbGUgY3g9JzQxNScgY3k9JzE4MCcgcj0nMTUnIGZpbGw9JyM4YzhjOGMnLz48cGF0aCBkPSdNMjAgMjU6aDIwME00MCAyNTBoMTgwTTgwIDI2MmgxNDAnIHN0cm9rZT0nI2N5YW4nIHN0cm9rZS13aWR0aD0nNCcgc3Ryb2tlLWRhc2hhcnJheT0nMTAgNScvPjxwYXRoIGQ9J00yMjAgMjQ2bDMwIDEwIDIwIDEwLTIwIDEwLTMwIDEwLTV6JyBmaWxsPScjZmZhYTAwJy8+PC9zdmc+IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
 
-    <!-- Motor Gráfico WebXR Universal -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; }
-        #html-ui { position: absolute; z-index: 10; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; font-family: sans-serif; color: white; }
-        .hud-element { padding: 20px; font-size: 20px; text-shadow: 2px 2px 4px #000; pointer-events: auto; }
+        body { margin: 0; overflow: hidden; background-color: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+        
+        /* INTERFAZ HUD 2D AJUSTADA PARA MÓVILES Y COMPUTADORA */
+        #html-ui { position: absolute; z-index: 100; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
+        .top-hud { display: flex; justify-content: space-between; padding: 15px; }
+        .hud-card { background: rgba(0, 0, 0, 0.7); padding: 10px 20px; border-radius: 8px; border: 1px solid #331155; color: white; font-weight: bold; font-size: 16px; }
+        
+        /* BOTONES DE CONTROL PARA MÓVIL (GIGANTES Y FÁCILES DE TOCAR) */
+        #mobile-controls { position: absolute; bottom: 30px; width: 100%; display: none; justify-content: space-between; padding: 0 40px; box-sizing: border-box; pointer-events: none; z-index: 150; }
+        .joystick-zone { width: 120px; height: 120px; background: rgba(255,255,255,0.1); border: 3px dashed rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
+        .joystick-button { width: 50px; height: 50px; background: white; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        
+        .action-zone { display: flex; flex-direction: column; gap: 12px; pointer-events: auto; }
+        .btn-action { width: 75px; height: 75px; border-radius: 50%; border: none; color: white; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.6); transition: transform 0.1s; }
+        .btn-action:active { transform: scale(0.9); }
+        #btn-wand { background: #8b5a2b; border: 2px solid #ffaa00; }
+        #btn-red { background: #cc0000; }
+        #btn-blue { background: #0000cc; }
+        #btn-purple { background: #660099; }
+        #btn-slow { background: #0088cc; width: 160px; border-radius: 10px; height: 45px; }
+
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- HUD del Juego -->
     <div id="html-ui">
-        <div class="hud-element" id="connection-status">Detectando conexión...</div>
-        <div class="hud-element" id="spell-slots">Hechizos: 3/3 restantes</div>
+        <div class="top-hud">
+            <div class="hud-card" id="connection-status">Detectando red...</div>
+            <div class="hud-card" id="spell-slots">Hechizos Guardados: 3/3</div>
+        </div>
+        <div class="top-hud" style="justify-content: center;">
+            <div class="hud-card" id="time-slow-indicator" style="background: rgba(0,136,204,0.3); border-color: #0088cc;">Tiempo Normal</div>
+        </div>
     </div>
 
-    <a-scene xr-mode-ui="XRMode: xr">
+    <div id="mobile-controls">
+        <div class="joystick-zone" id="touch-move-pad">
+            <div class="joystick-button" id="joystick-knob"></div>
+        </div>
+        
+        <div class="action-zone">
+            <button class="btn-action" id="btn-slow">Ralentizar (5s)</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-action" id="btn-wand">Cintura<br>Varita</button>
+                <button class="btn-action hidden" id="btn-red">Rojo</button>
+                <button class="btn-action hidden" id="btn-blue">Azul</button>
+                <button class="btn-action hidden" id="btn-purple">Púrpura</button>
+            </div>
+        </div>
+    </div>
+
+    <a-scene xr-mode-ui="XRMode: xr" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
         <a-assets>
-            <!-- Textura de respaldo integrada en código (Procedural/Color) para evitar caídas sin internet -->
             <canvas id="fallback-galaxy" width="256" height="256"></canvas>
         </a-assets>
 
-        <!-- CAMARA Y CONTROLES -->
         <a-entity id="rig" position="0 0 0">
-            <a-camera id="camera" look-controls wasd-controls="acceleration: 20">
-                <a-cursor id="mouse-cursor" raycaster="objects: .clickable" material="color: cyan; shader: flat" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"></a-cursor>
+            <a-camera id="camera" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true" wasd-controls="acceleration: 30">
+                <a-entity id="aim-dot" geometry="primitive: ring; radiusInner: 0.002; radiusOuter: 0.004" material="color: #fff; shader: flat" position="0 0 -1"></a-entity>
             </a-camera>
-            <a-entity oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
-            <a-entity id="right-hand" oculus-touch-controls="hand: right" laser-controls="hand: right" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
-        </a-entity>
-
-        <!-- ENTORNO: MENÚ PRINCIPAL -->
-        <a-entity id="main-menu">
-            <a-sky id="menu-sky" color="#0a051b"></a-sky>
-            <a-entity id="ton618-visual" geometry="primitive: sphere; radius: 15" material="color: #000; emissive: #331155" position="0 20 -40" visible="false"></a-entity>
-
-            <a-text id="menu-title" value="COSMIC MANNEQUIN" align="center" position="0 3.8 -4" width="8" color="#fff"></a-text>
-            <a-text id="network-indicator-3d" value="MODO: ONLINE" align="center" position="0 3.3 -4" width="4" color="#00ff00"></a-text>
-
-            <!-- Botones Modos de Juego -->
-            <a-entity id="btn-mode1" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #222" position="-1.3 2.4 -3">
-                <a-text value="Modo Evasión" align="center" position="0 0 0.05" width="4"></a-text>
-            </a-entity>
-
-            <a-entity id="btn-mode2" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #222" position="1.3 2.4 -3">
-                <a-text value="Modo Entorno" align="center" position="0 0 0.05" width="4"></a-text>
-            </a-entity>
-
-            <a-entity id="btn-solitario" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #115511" position="-1.3 1.7 -3">
-                <a-text value="Solitario (Offline)" align="center" position="0 0 0.05" width="4"></a-text>
-            </a-entity>
-
-            <a-entity id="btn-online" class="clickable" geometry="primitive: plane; width: 2.3; height: 0.5" material="color: #0055aa" position="1.3 1.7 -3">
-                <a-text id="txt-online" value="Buscar Partida Online" align="center" position="0 0 0.05" width="3.5"></a-text>
-            </a-entity>
-
-            <a-entity id="btn-mode3" class="clickable hidden" geometry="primitive: plane; width: 3; height: 0.5" material="color: #660000" position="0 1 -3">
-                <a-text value="MODO TON 618 (SECRETO)" align="center" position="0 0 0.05" width="4"></a-text>
-            </a-entity>
             
-            <a-entity id="btn-tutorial" class="clickable" geometry="primitive: plane; width: 2; height: 0.4" material="color: #444" position="0 3.0 -3">
-                <a-text value="Tutorial" align="center" position="0 0 0.05" width="3.5"></a-text>
+            <a-entity oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
+            <a-entity id="right-hand" oculus-touch-controls="hand: right" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
+        </a-entity>
+
+        <a-entity id="main-menu" position="0 0 0">
+            <a-sky id="menu-sky" color="#04020d"></a-sky>
+            <a-entity id="ton618-visual" geometry="primitive: sphere; radius: 10" material="color: #000; emissive: #110022" position="0 15 -35" visible="false"></a-entity>
+
+            <a-text id="menu-title" value="COSMIC MANNEQUIN" align="center" position="0 3.8 -4" width="9" color="#fff"></a-text>
+            <a-text id="network-indicator-3d" value="MODO: ONLINE" align="center" position="0 3.3 -4" width="4.5" color="#00ff00"></a-text>
+
+            <a-entity id="btn-mode1" class="clickable" geometry="primitive: box; width: 2.2; height: 0.6; depth: 0.1" material="color: #1a1a2e" position="-1.4 2.2 -3">
+                <a-text value="Modo Evasión" align="center" position="0 0 0.06" width="4.5"></a-text>
             </a-entity>
 
-            <!-- BOTÓN INSTALAR (Ubicado físicamente atrás en el menú 3D) -->
-            <a-entity id="btn-instalar" class="clickable hidden" geometry="primitive: box; width: 1.5; height: 0.5; depth: 0.2" material="color: #ffaa00" position="0 1.5 3" rotation="0 180 0">
-                <a-text value="INSTALAR JUEGO\n(En tu dispositivo)" align="center" position="0 0 0.11" width="3.5" color="#000"></a-text>
+            <a-entity id="btn-mode2" class="clickable" geometry="primitive: box; width: 2.2; height: 0.6; depth: 0.1" material="color: #1a1a2e" position="1.4 2.2 -3">
+                <a-text value="Modo Entorno" align="center" position="0 0 0.06" width="4.5"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-solitario" class="clickable" geometry="primitive: box; width: 2.2; height: 0.6; depth: 0.1" material="color: #0f3410" position="-1.4 1.3 -3">
+                <a-text value="Solitario (Offline)" align="center" position="0 0 0.06" width="4.5"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-online" class="clickable" geometry="primitive: box; width: 2.2; height: 0.6; depth: 0.1" material="color: #162447" position="1.4 1.3 -3">
+                <a-text id="txt-online" value="Modo Online" align="center" position="0 0 0.06" width="4.5"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-tutorial" class="clickable" geometry="primitive: box; width: 1.8; height: 0.4; depth: 0.1" material="color: #4e4e50" position="0 2.9 -3">
+                <a-text value="Tutorial Guiado" align="center" position="0 0 0.06" width="4"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-mode3" class="clickable hidden" geometry="primitive: box; width: 3.5; height: 0.6; depth: 0.1" material="color: #531111" position="0 0.5 -3">
+                <a-text value="MODO TON 618 (SECRETO)" align="center" position="0 0 0.06" width="4.5"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-instalar" class="clickable hidden" geometry="primitive: box; width: 2; height: 0.6; depth: 0.2" material="color: #ffaa00" position="0 1.5 3" rotation="0 180 0">
+                <a-text value="INSTALAR APP JUEGO" align="center" position="0 0 0.11" width="4" color="#000"></a-text>
             </a-entity>
         </a-entity>
 
-        <!-- MUNDO DEL JUEGO -->
+
         <a-entity id="game-world" visible="false">
-            <a-grid id="floor" material="color: #111"></a-grid>
-            <a-light type="ambient" color="#222"></a-light>
-            <a-light id="player-flashlight" type="spot" color="#fff" intensity="1.5" position="0 2 0" angle="30"></a-light>
-            <a-text id="game-text" value="Cargando..." align="center" position="0 2.5 -5" width="6"></a-text>
-            <a-entity id="wand-holster" class="clickable" geometry="primitive: cylinder; radius: 0.03; height: 0.4" material="color: #8b5a2b" position="0.3 0.8 -0.2"></a-entity>
+            <a-sky color="#020105"></a-sky>
+            
+            <a-grid id="floor" material="color: #1a1c1e; metalness: 0.6; roughness: 0.4" static-body></a-grid>
+            
+            <a-light type="ambient" color="#111122"></a-light>
+            <a-light id="room-alert-light" type="point" color="#ff0033" intensity="0.5" position="0 6 -10" animation="property: intensity; from: 0.2; to: 0.8; dir: alternate; loop: true; dur: 1500"></a-light>
+            
+            <a-light id="player-flashlight" type="spot" color="#fffbf0" intensity="1.8" position="0 2 0" angle="25" penumbra="0.5"></a-light>
+
+            <a-box position="0 2.5 -20" width="30" height="5" depth="0.5" material="color: #2b2e3a; metalness: 0.5"></a-box>
+            <a-box position="-15 2.5 -5" width="0.5" height="5" depth="30" material="color: #2b2e3a; metalness: 0.5"></a-box>
+            <a-box position="15 2.5 -5" width="0.5" height="5" depth="30" material="color: #2b2e3a; metalness: 0.5"></a-box>
+
+            <a-box class="map-wall" position="-4 2.5 -6" width="1.5" height="5" depth="1.5" material="color: #3f4454"></a-box>
+            <a-box class="map-wall" position="4 2.5 -10" width="2" height="5" depth="2" material="color: #3f4454"></a-box>
+            <a-box class="map-wall" position="-6 2.5 -14" width="2" height="5" depth="1.5" material="color: #3f4454"></a-box>
+            <a-box class="map-wall" position="5 2.5 -4" width="1" height="5" depth="3" material="color: #3f4454"></a-box>
+            
+            <a-box class="clickable" position="0 0.6 -8" width="1.2" height="1.2" depth="1.2" material="color: #1f4068; metalness: 0.8"></a-box>
+            <a-box class="clickable" position="-8 0.5 -5" width="1" height="1" depth="1" material="color: #1f4068; metalness: 0.8"></a-box>
+
+            <a-text id="game-text" value="Cargando mapa espacial..." align="center" position="0 3 -5" width="5.5" color="#fff"></a-text>
+
+            <a-entity id="wand-holster" class="clickable" geometry="primitive: cylinder; radius: 0.025; height: 0.35" material="color: #5c4033; emissive: #221100" position="0.35 0.7 -0.2"></a-entity>
         </a-entity>
     </a-scene>
 
     <script>
         let spellsLeft = 3;
         let isOnline = navigator.onLine;
+        let timeSlowed = false;
+        let wandEquipped = false;
         let deferredPrompt;
 
-        // Dibujar textura espacial matemática por si juegas sin internet
+        // Detector automático de tipo de dispositivo móvil
+        const mobileControlsElement = document.getElementById('mobile-controls');
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            // Si es un celular o tablet, activa el panel flotante de controles táctiles gigantes
+            mobileControlsElement.style.display = 'flex';
+            console.log("Dispositivo móvil detectado: Controles táctiles activados.");
+        }
+
+        // Generador de textura matemática espacial para juego Offline
         const canvas = document.getElementById('fallback-galaxy');
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#0a051b'; ctx.fillRect(0, 0, 256, 256);
-        for(let i=0; i<100; i++) { ctx.fillStyle = '#fff'; ctx.fillRect(Math.random()*256, Math.random()*256, 2, 2); }
+        ctx.fillStyle = '#050312'; ctx.fillRect(0, 0, 256, 256);
+        for(let i=0; i<120; i++) { ctx.fillStyle = '#ffffff'; ctx.fillRect(Math.random()*256, Math.random()*256, 2, 2); }
 
-        // 1. Detección automática de Internet
+        // Sistema de estado de red
         function updateNetworkStatus() {
             isOnline = navigator.onLine;
             const statusUI = document.getElementById('connection-status');
@@ -112,88 +175,169 @@
             const txtOnline = document.getElementById('txt-online');
 
             if (isOnline) {
-                statusUI.innerText = "Conectado - Modo Online Disponible";
-                statusUI.style.color = "lightgreen";
-                status3D.setAttribute('value', 'MODO: ONLINE');
-                status3D.setAttribute('color', '#00ff00');
-                btnOnline.setAttribute('material', 'color', '#0055aa');
-                txtOnline.setAttribute('value', 'Buscar Partida Online');
+                statusUI.innerText = "🌐 Online"; statusUI.style.color = "#00ffcc";
+                status3D.setAttribute('value', 'MODO: ONLINE'); status3D.setAttribute('color', '#00ffcc');
+                btnOnline.setAttribute('material', 'color', '#162447');
+                txtOnline.setAttribute('value', 'Modo Online');
             } else {
-                statusUI.innerText = "Sin Internet - Solo Modo Solitario";
-                statusUI.style.color = "orange";
-                status3D.setAttribute('value', 'MODO: OFFLINE');
-                status3D.setAttribute('color', '#ffaa00');
-                btnOnline.setAttribute('material', 'color', '#333333'); // Botón desactivado visualmente
+                statusUI.innerText = "⚠️ Sin Internet (Modo Solitario Forzado)"; statusUI.style.color = "#ff9900";
+                status3D.setAttribute('value', 'MODO: OFFLINE'); status3D.setAttribute('color', '#ff9900');
+                btnOnline.setAttribute('material', 'color', '#222222');
                 txtOnline.setAttribute('value', 'Online (Bloqueado)');
             }
         }
         window.addEventListener('online', updateNetworkStatus);
         window.addEventListener('offline', updateNetworkStatus);
 
-        // Al iniciar partida online, si no hay internet redirige a solitario automáticamente
+        // CONFIGURACIÓN DE CLICS EN LOS BOTONES 3D DEL MENÚ
+        document.getElementById('btn-mode1').addEventListener('click', () => startMatch('evasion'));
+        document.getElementById('btn-mode2').addEventListener('click', () => startMatch('entorno'));
+        document.getElementById('btn-solitario').addEventListener('click', () => startMatch('solitario'));
+        document.getElementById('btn-tutorial').addEventListener('click', () => startMatch('tutorial'));
+        document.getElementById('btn-mode3').addEventListener('click', () => startMatch('ton618'));
+
         document.getElementById('btn-online').addEventListener('click', () => {
             if (!isOnline) {
-                alert("¡No tienes conexión! Iniciando Modo Solitario automáticamente...");
+                alert("¡No tienes internet! Entrando a partida en Solitario de forma automática...");
                 startMatch('solitario');
             } else {
-                alert("Buscando servidores en la nube...");
+                alert("Conectando al servidor central multijugador...");
                 startMatch('online');
             }
         });
 
-        document.getElementById('btn-solitario').addEventListener('click', () => { startMatch('solitario'); });
-
-        function startMatch(type) {
+        // Transición de carga al mapa real
+        function startMatch(mode) {
             document.getElementById('main-menu').setAttribute('visible', 'false');
             document.getElementById('game-world').setAttribute('visible', 'true');
-            const text = document.getElementById('game-text');
-            if (type === 'solitario') {
-                text.setAttribute('value', "Modo Solitario Local\nLos Maniquíes están acechando.");
-            } else {
-                text.setAttribute('value', "Conectado a la Sesión Online Multijugador");
+            const gameText = document.getElementById('game-text');
+            
+            let message = "Mapa: Estación Ecos Cósmicos\n";
+            if(mode === 'evasion') message += "Evita el contacto. Los Maniquíes acechan quietos.";
+            if(mode === 'entorno') message += "Usa los contenedores y pilares para cubrirte.";
+            if(mode === 'solitario') message += "Partida Local sin conexión. Cuidado con las sombras.";
+            if(mode === 'tutorial') message += "Tutorial: Agarra la varita café de tu cintura.";
+            if(mode === 'ton618') message += "⚠️ ERROR GRAVITATORIO: TON 618 ABSORBIENDO MATERIA ⚠️";
+            if(mode === 'online') message += "Partida Multijugador en Línea Iniciada.";
+
+            gameText.setAttribute('value', message);
+        }
+
+        // CONTROL DE RALENTIZAR EL TIEMPO (Habilidad Especial)
+        function triggerTimeSlow() {
+            if (!timeSlowed) {
+                timeSlowed = true;
+                document.getElementById('time-slow-indicator').innerText = "⏱️ TIEMPO LENTO (5s)";
+                document.getElementById('time-slow-indicator').style.color = "#00ffcc";
+                document.getElementById('room-alert-light').setAttribute('animation', 'dur: 6000'); // Ralentiza la luz parpadeante
+                
+                setTimeout(() => {
+                    timeSlowed = false;
+                    document.getElementById('time-slow-indicator').innerText = "Tiempo Normal";
+                    document.getElementById('time-slow-indicator').style.color = "white";
+                    document.getElementById('room-alert-light').setAttribute('animation', 'dur: 1500');
+                }, 5000);
             }
         }
 
-        // 2. Sistema del Botón de Instalación (Atrás tuyo en el espacio 3D)
-        const btnInstalar = document.getElementById('btn-instalar');
+        // Vincular tiempo lento según dispositivo (Grip VR, Tecla Shift en PC, Botón Azul en Celular)
+        document.getElementById('right-hand').addEventListener('gripdown', triggerTimeSlow);
+        document.getElementById('btn-slow').addEventListener('click', triggerTimeSlow);
+        window.addEventListener('keydown', (e) => { if (e.key === 'Shift') triggerTimeSlow(); });
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Evita que Android/PC abran su propio menú por defecto
-            e.preventDefault();
-            deferredPrompt = e;
-            // Muestra el botón dorado que está a la espalda del jugador
-            btnInstalar.classList.remove('hidden');
+        // SISTEMA DE INTERACCIÓN CON LA VARITA MÁGICA
+        const wandHolster = document.getElementById('wand-holster');
+        const btnWandMobile = document.getElementById('btn-wand');
+
+        function equipWand() {
+            if (!wandEquipped) {
+                wandEquipped = true;
+                // Mueve la varita visualmente al frente de la cámara simulando estar en la mano
+                wandHolster.setAttribute('position', '0.2 -0.3 -0.4'); 
+                wandHolster.setAttribute('rotation', '45 0 0');
+                wandHolster.setAttribute('material', 'emissive: #9900ff');
+                
+                // Mostrar botones de hechizos de Gojo en celulares
+                document.getElementById('btn-red').classList.remove('hidden');
+                document.getElementById('btn-blue').classList.remove('hidden');
+                document.getElementById('btn-purple').classList.remove('hidden');
+                btnWandMobile.innerText = "Varita OK";
+                btnWandMobile.style.background = "#22aa22";
+
+                document.getElementById('game-text').setAttribute('value', "¡Varita Equipada!\nDispara Hechizos de Gojo (Botones en pantalla / Teclas 1, 2, 3)");
+            }
+        }
+        wandHolster.addEventListener('click', equipWand);
+        btnWandMobile.addEventListener('click', equipWand);
+
+        // SISTEMA DE LANZAMIENTO DE HECHIZOS (Límite estricto de 3 por partida)
+        function castGojoSpell(colorHex, name) {
+            if (!wandEquipped) {
+                alert("¡Primero tienes que equipar la varita de tu cintura!");
+                return;
+            }
+            if (spellsLeft <= 0) {
+                alert("Agotaste tus 3 ranuras de hechizo para esta partida.");
+                return;
+            }
+
+            spellsLeft--;
+            document.getElementById('spell-slots').innerText = `Hechizos Guardados: ${spellsLeft}/3`;
+
+            // Spawnear esfera del ataque en el espacio 3D frente al jugador
+            const projectile = document.createElement('a-sphere');
+            projectile.setAttribute('radius', name === 'Púrpura' ? '0.6' : '0.25');
+            projectile.setAttribute('position', '0 1.2 -1.5');
+            projectile.setAttribute('color', colorHex);
+            projectile.setAttribute('material', 'emissive', colorHex);
+            // Animación de disparo hacia adelante a toda velocidad
+            projectile.setAttribute('animation', `property: position; to: 0 1.2 -25; dur: ${name === 'Púrpura' ? 900 : 1600}; easing: linear`);
+            
+            document.getElementById('game-world').appendChild(projectile);
+            document.getElementById('game-text').setAttribute('value', `¡Ejecutando técnica de Gojo: ${name}!`);
+        }
+
+        // Vincular disparos para Celular Táctil
+        document.getElementById('btn-red').addEventListener('click', () => castGojoSpell('#ff0022', 'Rojo'));
+        document.getElementById('btn-blue').addEventListener('click', () => castGojoSpell('#0044ff', 'Azul'));
+        document.getElementById('btn-purple').addEventListener('click', () => castGojoSpell('#a100ff', 'Púrpura'));
+
+        // Vincular disparos para Teclado de PC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '1') castGojoSpell('#ff0022', 'Rojo');
+            if (e.key === '2') castGojoSpell('#0044ff', 'Azul');
+            if (e.key === '3') castGojoSpell('#a100ff', 'Púrpura');
         });
 
+        // MECÁNICA DEL MENÚ ALEATORIO DE TON 618 (Probabilidad 1 de 5)
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNetworkStatus();
+            const dice = Math.floor(Math.random() * 5) + 1;
+            if (dice === 5) {
+                document.getElementById('menu-sky').setAttribute('src', '#fallback-galaxy');
+                document.getElementById('menu-title').setAttribute('value', 'MENÚ: TEMÁTICA TON 618');
+                document.getElementById('menu-title').setAttribute('color', '#ff0055');
+                document.getElementById('btn-mode3').classList.remove('hidden');
+                document.getElementById('ton618-visual').setAttribute('visible', 'true');
+                console.log("Huevo de Pascua activado: Menú Galaxia de TON 618.");
+            }
+        });
+
+        // MANEJO DE INSTALACIÓN PWA (Botón 3D a la espalda del jugador)
+        const btnInstalar = document.getElementById('btn-instalar');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); deferredPrompt = e;
+            btnInstalar.classList.remove('hidden');
+        });
         btnInstalar.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('El usuario instaló Cosmic Echoes.');
-                    btnInstalar.classList.add('hidden'); // Desaparece tras instalar
-                }
+                if (outcome === 'accepted') btnInstalar.classList.add('hidden');
                 deferredPrompt = null;
             }
         });
-
-        // Ocultar si ya está instalada la app en formato independiente
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            btnInstalar.classList.add('hidden');
-        }
-
-        // 3. Probabilidad TON 618 (1 de 5)
-        window.addEventListener('DOMContentLoaded', () => {
-            updateNetworkStatus();
-            if (Math.floor(Math.random() * 5) + 1 === 5) {
-                const sky = document.querySelector('#menu-sky');
-                sky.setAttribute('src', '#fallback-galaxy');
-                document.querySelector('#menu-title').setAttribute('value', 'TON 618 DETECTED');
-                document.querySelector('#menu-title').setAttribute('color', '#ff0055');
-                document.querySelector('#btn-mode3').classList.remove('hidden');
-                document.querySelector('#ton618-visual').setAttribute('visible', 'true');
-            }
-        });
+        if (window.matchMedia('(display-mode: standalone)').matches) btnInstalar.classList.add('hidden');
     </script>
 </body>
 </html>
