@@ -18,7 +18,9 @@
         .top-hud { display: flex; justify-content: space-between; padding: 12px; pointer-events: auto; gap: 5px; }
         .hud-card { background: rgba(3, 3, 8, 0.96); padding: 8px 12px; border-radius: 6px; border: 1px solid #ffaa00; color: white; font-weight: bold; font-size: 11px; box-shadow: 0 0 10px rgba(255,170,0,0.2); }
         
-        #btn-pwa-install { background: #ffaa00; color: black; font-weight: bold; border: 2px solid #fff; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: block; pointer-events: auto; box-shadow: 0 0 15px #ffaa00; font-size: 11px; }
+        /* FIJADO DE BOTÓN DE INSTALACIÓN PRIORITARIO */
+        #install-bar { position: absolute; top: 12px; left: 12px; z-index: 999999; pointer-events: auto; }
+        #btn-pwa-install { background: #ffaa00; color: black; font-weight: bold; border: 2px solid #fff; padding: 10px 16px; border-radius: 8px; cursor: pointer; box-shadow: 0 0 15px #ffaa00; font-size: 11px; }
         
         /* CONTROLES MÓVILES */
         #mobile-controls { position: absolute; bottom: 15px; width: 100%; height: 180px; display: none; justify-content: space-between; padding: 0 25px; box-sizing: border-box; pointer-events: none; z-index: 2000; }
@@ -47,6 +49,10 @@
 </head>
 <body>
 
+    <div id="install-bar">
+        <button id="btn-pwa-install">📥 INSTALAR JUEGO</button>
+    </div>
+
     <div id="wow-menu">
         <h3 style="margin: 0; font-size: 16px; color: #ffaa00;">Sintonizador de Varita WoW</h3>
         <p style="margin: 0; font-size: 11px; color: #ccc;">Sintoniza tus catalizadores mágicos elementales</p>
@@ -60,10 +66,9 @@
     </div>
 
     <div id="html-ui">
-        <div class="top-hud">
-            <button id="btn-pwa-install">📥 INSTALAR JUEGO</button>
+        <div class="top-hud" style="justify-content: flex-end;">
             <div class="hud-card" id="player-hp">INTEGRIDAD: 100%</div>
-            <div class="hud-card" id="combo-status" style="border-color:#ffaa00;">SISTEMA: LISTO</div>
+            <div class="hud-card" id="combo-status" style="border-color:#ffaa00; margin-left: 5px;">SISTEMA: LISTO</div>
         </div>
         
         <div class="top-hud" style="justify-content: flex-start; padding-left: 12px; flex-direction: column; gap: 8px;">
@@ -97,11 +102,12 @@
                 <a-entity geometry="primitive: ring; radiusInner: 0.002; radiusOuter: 0.0035" material="color: #ffaa00; shader: flat" position="0 0 -1"></a-entity>
                 <a-entity id="hand-anchor" position="0.3 -0.25 -0.6"></a-entity>
             </a-camera>
+            
             <a-entity oculus-touch-controls="hand: left" id="leftHandVR"></a-entity>
-            <a-entity oculus-touch-controls="hand: right" id="rightHandVR"></a-entity>
+            <a-entity oculus-touch-controls="hand: right" id="rightHandVR" laser-controls="hand: right" raycaster="objects: .clickable; far: 20; interval: 100"></a-entity>
         </a-entity>
 
-        <a-entity id="main-menu">
+        <a-entity id="main-menu" visible="false">
             <a-sky color="#020104"></a-sky>
             <a-entity id="ton618-sphere" geometry="primitive: sphere; radius: 10" material="color: #000; shader: flat" position="0 12 -30" visible="false"></a-entity>
 
@@ -109,14 +115,10 @@
             
             <a-entity id="menu-mannequin-showcase" position="0 0.5 -5" rotation="0 45 0"></a-entity>
 
-            <a-entity class="clickable" geometry="primitive: box; width: 2.4; height: 0.45; depth: 0.1" material="color: #ffaa00; metalness: 0.5; roughness: 0.2" position="0 2.4 -3" onclick="loadMap('tutorial')">
-                <a-text value="INICIAR TUTORIAL JUGABLE" align="center" position="0 0 0.06" width="3.8" color="#000"></a-text>
-            </a-entity>
-
-            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #16161c; metalness: 0.8; roughness: 0.2" position="-1.2 1.6 -3" onclick="loadMap('evasion')">
+            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #16161c; metalness: 0.8; roughness: 0.2" position="-1.2 1.8 -3" onclick="loadMap('evasion')">
                 <a-text value="Modo Evasion" align="center" position="0 0 0.06" width="4"></a-text>
             </a-entity>
-            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #16161c; metalness: 0.8; roughness: 0.2" position="1.2 1.6 -3" onclick="loadMap('entorno')">
+            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #16161c; metalness: 0.8; roughness: 0.2" position="1.2 1.8 -3" onclick="loadMap('entorno')">
                 <a-text value="Modo Entorno" align="center" position="0 0 0.06" width="4"></a-text>
             </a-entity>
 
@@ -125,7 +127,7 @@
             </a-entity>
         </a-entity>
 
-        <a-entity id="game-world" visible="false">
+        <a-entity id="game-world" visible="true">
             <a-sky color="#030206"></a-sky>
             <a-grid material="color: #0d0d12; roughness: 0.15; metalness: 0.85; repeat: 50 50"></a-grid>
             <a-light type="ambient" color="#181826"></a-light>
@@ -141,7 +143,7 @@
 
             <a-text id="game-prompt" value="" align="center" position="0 3.2 -4.5" width="4.8" color="#ffaa00"></a-text>
             <a-entity id="exit-tutorial-portal" class="clickable" geometry="primitive: cylinder; radius: 0.8; height: 0.1" material="color: #ffaa00; emissive: #ffaa00" position="0 0.05 -15" visible="false" onclick="exitTutorialMode()">
-                <a-text value="COMPLETO: VOLVER" align="center" rotation="-90 0 0" position="0 0.1 0" width="4"></a-text>
+                <a-text value="COMPLETO: IR AL MENÚ" align="center" rotation="-90 0 0" position="0 0.1 0" width="4"></a-text>
             </a-entity>
         </a-entity>
     </a-scene>
@@ -149,13 +151,12 @@
     <script>
         let selectedWoW = [];
         let timeSlowed = false;
-        let currentMode = 'menu';
+        let currentMode = 'tutorial'; // Forzado nativo inicial
         let playerHP = 100;
         let eyeOpen = false;
         
         let tutorialStep = 0;
 
-        // Gestión de tiempos de clicks para variantes
         let lastBlueClickTime = 0;
         let redChargeTimer = null;
         let redChargeDuration = 0;
@@ -187,7 +188,7 @@
         function buildMannequinMesh(parentEntity) {
             let head = document.createElement('a-sphere');
             head.setAttribute('radius', '0.16'); head.setAttribute('color', '#d2d5da'); head.setAttribute('position', '0 1.75 0');
-            head.setAttribute('material', 'metalness:0.95; roughness:0.08; envMap: #sky');
+            head.setAttribute('material', 'metalness:0.95; roughness:0.08');
 
             let visor = document.createElement('a-box');
             visor.setAttribute('width', '0.24'); visor.setAttribute('height', '0.045'); visor.setAttribute('depth', '0.09');
@@ -213,8 +214,11 @@
             parentEntity.appendChild(leftArm); parentEntity.appendChild(rightArm); parentEntity.appendChild(stand);
         }
 
+        // DISPARO AUTOMÁTICO DE MAPA TUTORIAL AL ARRANCAR
         window.addEventListener('load', () => {
             buildMannequinMesh(document.getElementById('menu-mannequin-showcase'));
+            loadMap('tutorial'); // Carga directa del espacio tutorial seguro
+            
             const dice = Math.floor(Math.random() * 5) + 1;
             if (dice === 5) {
                 document.getElementById('ton618-sphere').setAttribute('visible', 'true');
@@ -224,14 +228,12 @@
 
         // ================= GESTIÓN LÓGICA DE HECHIZOS COMBINADOS JJK =================
 
-        // CARGA EN MANO DEL CONJURO ROJO (MANTENER PULSADO)
         function startRedCharge() {
             if(currentMode === 'menu') return;
             isHoldingRed = true;
             redChargeDuration = 0;
             document.getElementById('combo-status').innerText = "CARGANDO VECTOR ROJO...";
             
-            // Renderizar orbe visual de carga en la mano del jugador
             let chargeSphere = document.createElement('a-sphere');
             chargeSphere.setAttribute('id', 'visual-red-charge');
             chargeSphere.setAttribute('radius', '0.1');
@@ -247,7 +249,6 @@
                     if(currentRad < 0.25) vRed.setAttribute('radius', currentRad + 0.01);
                 }
                 
-                // MÁXIMA CONDICIÓN: FUSIÓN ADAPTATIVA PÚRPURA (SI MANTIENE AMBOS EN TECLADO/MÓVIL)
                 if (isHoldingRed && isHoldingBlueForPurple) {
                     executePurpleHollow();
                     endRedCharge();
@@ -264,34 +265,28 @@
             if(vRed) vRed.remove();
 
             if (redChargeDuration >= 2000) {
-                // Variante Rojo + Rojo: Mini Explosión Defensiva de Corto Alcance
                 document.getElementById('combo-status').innerText = "¡ROJO: EXPLOSIÓN INTERNA!";
                 spawnBlastRing('#ff0033', 3, 400);
                 if(currentMode === 'tutorial' && tutorialStep === 1) advanceTutorial();
             } else {
-                // Un solo Rojo suelto: Lanzable Convencional
                 document.getElementById('combo-status').innerText = "CONJURO: ROJO EMITIDO";
                 spawnMagicSphere('#ff0033', 0.28, 950, 'red-projectile');
             }
         }
 
-        // CONTROLADOR DE CASOS PARA EL ELEMENTO AZUL (Doble click o disparo)
         function triggerBlueSpell() {
             if(currentMode === 'menu') return;
             let now = Date.now();
             if (now - lastBlueClickTime < 350) {
-                // Variante Azul + Azul: Atracción Estática Colectiva Laplace
                 document.getElementById('combo-status').innerText = "¡AZUL MAX: ATRACCIÓN LAPLACE!";
                 spawnStaticVortex('#0044ff', 5, 5000);
             } else {
-                // Un solo azul: Proyectil base directo
                 document.getElementById('combo-status').innerText = "CONJURO: AZUL EMITIDO";
                 spawnMagicSphere('#0044ff', 0.28, 950, 'blue-projectile');
             }
             lastBlueClickTime = now;
         }
 
-        // LANZAMIENTO EJECUTIVO DEL HOLLOW PURPLE (MÁXIMO PODER)
         function executePurpleHollow() {
             document.getElementById('combo-status').innerText = "¡TÉCNICA IMAGINARIA: PÚRPURA!";
             isHoldingBlueForPurple = false;
@@ -299,7 +294,6 @@
             if(currentMode === 'tutorial' && tutorialStep === 1) advanceTutorial();
         }
 
-        // TRACKING DE CRUCE DE MANDOS DE OCULUS (GESTO FÍSICO REAL EN VR)
         function checkOculusGestoPurple() {
             let leftHand = document.getElementById('leftHandVR');
             let rightHand = document.getElementById('rightHandVR');
@@ -309,20 +303,10 @@
             let pRight = rightHand.getAttribute('position');
             if(!pLeft || !pRight) return;
 
-            // Calcular distancia absoluta tridimensional Euclidiana entre ambos mandos
-            let dist = Math.sqrt(
-                Math.pow(pLeft.x - pRight.x, 2) +
-                Math.pow(pLeft.y - pRight.y, 2) +
-                Math.pow(pLeft.z - pRight.z, 2)
-            );
-
-            // Si las manos se juntan a menos de 30 centímetros mientras se sostienen los gatillos
-            if (dist < 0.30) {
-                executePurpleHollow();
-            }
+            let dist = Math.sqrt(Math.pow(pLeft.x-pRight.x,2) + Math.pow(pLeft.y-pRight.y,2) + Math.pow(pLeft.z-pRight.z,2));
+            if (dist < 0.30) { executePurpleHollow(); }
         }
 
-        // Bucle continuo de escaneo de proximidad para VR Quest
         setInterval(() => {
             if(currentMode !== 'menu') {
                 checkOculusGestoPurple();
@@ -330,7 +314,6 @@
             }
         }, 150);
 
-        // MAPEO COMPLETO DE TECLADO PARA MANDO DE PC
         window.addEventListener('keydown', (e) => {
             let key = e.key.toLowerCase();
             if(key === 'e') { if(!isHoldingRed) startRedCharge(); }
@@ -347,7 +330,6 @@
 
         // ================= INSTANCIACIÓN DE ENTIDADES DINÁMICAS =================
 
-        // 1. Proyectiles Dinámicos Base (Físicas de Viaje Línea Recta)
         function spawnMagicSphere(color, radius, speed, className) {
             const sphere = document.createElement('a-sphere');
             sphere.setAttribute('class', className);
@@ -372,11 +354,9 @@
             sphere.setAttribute('animation', `property: position; from: ${startX} ${startY} ${startZ}; to: ${targetX} ${targetY} ${targetZ}; dur: ${speed}; easing: linear`);
             activeSpells.appendChild(sphere);
 
-            // Auto-limpieza tras abandono de mapa límite
             setTimeout(() => { if(sphere) sphere.remove(); }, speed);
         }
 
-        // 2. Variante Azul+Azul: Campo Gravitatorio Estático (Atracción Colectiva)
         function spawnStaticVortex(color, radius, duration) {
             const vortex = document.createElement('a-entity');
             vortex.setAttribute('class', 'static-blue-vortex');
@@ -386,22 +366,17 @@
             core.setAttribute('color', color);
             core.setAttribute('material', `emissive: ${color}; emissiveIntensity: 3; transparent: true; opacity: 0.8`);
             
-            // Anillo externo orbital translúcido indicando los 5 metros de rango
             let ring = document.createElement('a-ring');
-            ring.setAttribute('radius-inner', '4.8');
-            ring.setAttribute('radius-outer', '5.0');
-            ring.setAttribute('color', '#00ffff');
-            ring.setAttribute('rotation', '-90 0 0');
+            ring.setAttribute('radius-inner', '4.8'); ring.setAttribute('radius-outer', '5.0');
+            ring.setAttribute('color', '#00ffff'); ring.setAttribute('rotation', '-90 0 0');
             ring.setAttribute('material', 'shader: flat; side: double');
 
-            vortex.appendChild(core);
-            vortex.appendChild(ring);
+            vortex.appendChild(core); vortex.appendChild(ring);
 
             let playerPos = rig.getAttribute('position');
             let currentRot = camera.getAttribute('rotation');
             let angleRad = currentRot.y * (Math.PI / 180);
             
-            // Posicionar de forma fija a 6 metros frente a la mirada del brujo
             let spawnX = playerPos.x - Math.sin(angleRad) * 6;
             let spawnZ = playerPos.z - Math.cos(angleRad) * 6;
             vortex.setAttribute('position', `${spawnX} 1.5 ${spawnZ}`);
@@ -410,13 +385,10 @@
             setTimeout(() => { if(vortex) vortex.remove(); }, duration);
         }
 
-        // 3. Variante Rojo+Rojo: Onda Expansiva Radial Cilíndrica
         function spawnBlastRing(color, maxRadius, speed) {
             const ring = document.createElement('a-ring');
-            ring.setAttribute('radius-inner', '0.1');
-            ring.setAttribute('radius-outer', '0.2');
-            ring.setAttribute('color', color);
-            ring.setAttribute('rotation', '-90 0 0');
+            ring.setAttribute('radius-inner', '0.1'); ring.setAttribute('radius-outer', '0.2');
+            ring.setAttribute('color', color); ring.setAttribute('rotation', '-90 0 0');
             ring.setAttribute('material', 'shader: flat; side: double');
             
             let pos = rig.getAttribute('position');
@@ -428,7 +400,6 @@
             setTimeout(() => { ring.remove(); }, speed);
         }
 
-        // ================= DETECCIÓN DE INTERACCIÓN QUÍMICA: HOLLOW NUKE =================
         function checkVortexCollisions() {
             let vortexes = document.querySelectorAll('.static-blue-vortex');
             let projectiles = document.querySelectorAll('.red-projectile');
@@ -439,18 +410,11 @@
                     let pPos = proj.getAttribute('position');
                     if(!vPos || !pPos) return;
 
-                    let dist = Math.sqrt(
-                        Math.pow(vPos.x - pPos.x, 2) +
-                        Math.pow(vPos.y - pPos.y, 2) +
-                        Math.pow(vPos.z - pPos.z, 2)
-                    );
-
-                    // COLISIÓN CRÍTICA DETECTADA: Lanzamiento del Hollow Nuke Atómico
+                    let dist = Math.sqrt(Math.pow(vPos.x-pPos.x,2)+Math.pow(vPos.y-pPos.y,2)+Math.pow(vPos.z-pPos.z,2));
                     if(dist < 1.8) {
-                        proj.remove();
-                        vortex.remove();
+                        proj.remove(); vortex.remove();
                         document.getElementById('combo-status').innerText = "¡COLISIÓN: HOLLOW NUKE ATÓMICO!";
-                        spawnBlastRing('#ffffff', 12, 600); // Destello masivo blanco/púrpura
+                        spawnBlastRing('#ffffff', 12, 600);
                     }
                 });
             });
@@ -482,10 +446,9 @@
             
             selectedWoW.forEach(spell => {
                 const btn = document.createElement('button');
-                btn.className = 'btn-game'; btn.style.background = '#4a2c11';
+                btn.className = 'btn-game clickable'; btn.style.background = '#4a2c11';
                 btn.innerText = spell;
                 
-                // ASIGNACIÓN DE IDENTIDAD GRÁFICA Y FÍSICA PROPIA POR HECHIZO REAL
                 btn.onclick = () => {
                     if(spell === 'Fuego') spawnMagicSphere('#ff6600', 0.32, 800, 'wow-fire');
                     if(spell === 'Rayo') spawnMagicSphere('#ffff00', 0.12, 400, 'wow-bolt');
@@ -496,7 +459,7 @@
             });
         }
 
-        // ================= SISTEMA INTEGRAL DE CONTROL DE MAPAS Y TUTORIAL =================
+        // ================= CONTROL TUTORIAL INTERACTIVO INTEGRADO =================
         function advanceTutorial() {
             tutorialStep++;
             const promptText = document.getElementById('game-prompt');
@@ -504,7 +467,7 @@
             if (tutorialStep === 1) {
                 promptText.setAttribute('value', "PASO 2: TÉCNICAS MÁXIMAS.\nMantén presionado ROJO por 2 segundos para liberar la Mini Explosión.");
             } else if (tutorialStep === 2) {
-                promptText.setAttribute('value', "¡EXCELENTE TRABAJO COMBINATORIO!\nCruza el anillo de datos dorado para regresar.");
+                promptText.setAttribute('value', "¡EXCELENTE TRABAJO COMBINATORIO!\nCruza el anillo de datos dorado al fondo para entrar al menú real.");
                 document.getElementById('exit-tutorial-portal').setAttribute('visible', 'true');
             }
         }
@@ -553,7 +516,7 @@
             }
         }
 
-        // SISTEMA DE JOYSTICK DIRECTO MÓVIL
+        // JOYSTICK DIRECTO MÓVIL
         boundary.addEventListener('touchstart', (e) => { e.stopPropagation(); isDraggingJoystick = true; updateJoystick(e.touches[0]); });
         window.addEventListener('touchmove', (e) => { if (isDraggingJoystick) { e.stopPropagation(); updateJoystick(e.touches[0]); } });
         window.addEventListener('touchend', () => {
@@ -566,18 +529,12 @@
             const rect = boundary.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            let deltaX = touch.clientX - centerX;
-            let deltaY = touch.clientY - centerY;
+            let deltaX = touch.clientX - centerX; let deltaY = touch.clientY - centerY;
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             const maxRadius = 32;
 
-            if (distance > maxRadius) {
-                deltaX = (deltaX / distance) * maxRadius;
-                deltaY = (deltaY / distance) * maxRadius;
-            }
-
-            knob.style.left = `${32 + deltaX}px`;
-            knob.style.top = `${32 + deltaY}px`;
+            if (distance > maxRadius) { deltaX = (deltaX / distance) * maxRadius; deltaY = (deltaY / distance) * maxRadius; }
+            knob.style.left = `${32 + deltaX}px`; knob.style.top = `${32 + deltaY}px`;
             moveX = deltaX / maxRadius; moveZ = deltaY / maxRadius;
         }
 
@@ -585,21 +542,18 @@
             if ((moveX !== 0 || moveZ !== 0) && currentMode !== 'menu' && isMobile) {
                 let speed = timeSlowed ? 0.03 : 0.095;
                 const angle = rotY * (Math.PI / 180);
-                let forwardX = Math.sin(angle) * moveZ;
-                let forwardZ = Math.cos(angle) * moveZ;
-                let sideX = Math.cos(angle) * moveX;
-                let sideZ = -Math.sin(angle) * moveX;
+                let forwardX = Math.sin(angle) * moveZ; let forwardZ = Math.cos(angle) * moveZ;
+                let sideX = Math.cos(angle) * moveX; let sideZ = -Math.sin(angle) * moveX;
 
                 let currentPos = rig.getAttribute('position');
-                currentPos.x += (forwardX - sideX) * speed; 
-                currentPos.z += (forwardZ + sideZ) * speed;
+                currentPos.x += (forwardX - sideX) * speed; currentPos.z += (forwardZ + sideZ) * speed;
                 rig.setAttribute('position', currentPos);
 
                 if(currentMode === 'tutorial' && tutorialStep === 0) advanceTutorial();
             }
         }, 20);
 
-        // VISTA TÁCTIL MÓVIL
+        // ROTACIÓN TÁCTIL MÓVIL
         window.addEventListener('touchstart', (e) => {
             if (!isMobile) return;
             if (e.touches[0].clientX > window.innerWidth / 2 || currentMode === 'menu') { isMovingCamera = true; prevTouchX = e.touches[0].clientX; prevTouchY = e.touches[0].clientY; }
@@ -631,9 +585,9 @@
             setInterval(() => { if (currentMode !== 'bossfight') return; eyeOpen = !eyeOpen; eye.setAttribute('material', 'color', eyeOpen ? '#ff0044' : '#080002'); }, 3000);
         }
 
-        // DISPARADOR MANUAL DEL BOTÓN INSTALAR PWA ACCESO DIRECTO
+        // REDIRECCIÓN INTERNA PARA LA INSTALACIÓN DE LA PWA
         document.getElementById('btn-pwa-install').addEventListener('click', () => {
-            alert("SISTEMA DE CORRECCIÓN DE LOGÍSTICA:\n\n- En Teléfonos: Despliega el menú lateral de tu navegador y pulsa 'Añadir a la pantalla principal'.\n- En PC / Oculus VR: Acepta la ventana flotante emergente del navegador para guardar el ejecutable local.");
+            alert("SISTEMA DE DESPLIEGUE:\n\n- Móvil: Despliega el menú del navegador y pulsa 'Añadir a pantalla de inicio'.\n- PC / Oculus VR: Pulsa el icono de instalación de la barra de direcciones de tu navegador.");
         });
     </script>
 </body>
