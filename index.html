@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>War of Mannequins</title>
+    <title>War of Mannequins: Dreamcore Edition</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
@@ -13,56 +13,62 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: #000; font-family: sans-serif; user-select: none; touch-action: none; }
         #html-ui { position: absolute; z-index: 100; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
-        .top-hud { display: flex; justify-content: space-between; padding: 12px; pointer-events: auto; }
-        .hud-card { background: rgba(0, 0, 0, 0.85); padding: 8px 12px; border-radius: 6px; border: 2px solid #331155; color: white; font-weight: bold; font-size: 13px; }
         
-        /* JOYSTICK FIJO OPERATIVO */
+        /* Efecto de viñeta Dreamcore en los bordes de la pantalla */
+        #dreamcore-overlay { position: absolute; top:0; left:0; width:100%; height:100%; z-index:10; pointer-events:none; box-shadow: inset 0 0 100px rgba(0,0,0,0.85); }
+        
+        .top-hud { display: flex; justify-content: space-between; padding: 12px; pointer-events: auto; }
+        .hud-card { background: rgba(5, 5, 10, 0.9); padding: 8px 12px; border-radius: 6px; border: 1px solid #ff0055; color: white; font-weight: bold; font-size: 13px; text-shadow: 0 0 5px #ff0055; }
+        
+        /* JOYSTICK FIJO TOTALMENTE DIRECCIONAL */
         #mobile-controls { position: absolute; bottom: 15px; width: 100%; height: 180px; display: none; justify-content: space-between; padding: 0 25px; box-sizing: border-box; pointer-events: none; z-index: 150; }
-        .joystick-container { width: 110px; height: 110px; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); border-radius: 50%; position: relative; pointer-events: auto; margin-top: 40px; }
-        #joystick-knob { width: 45px; height: 45px; background: #ffffff; border-radius: 50%; position: absolute; top: 32px; left: 32px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+        .joystick-container { width: 110px; height: 110px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; position: relative; pointer-events: auto; margin-top: 40px; }
+        #joystick-knob { width: 45px; height: 45px; background: #ffffff; border-radius: 50%; position: absolute; top: 32px; left: 32px; box-shadow: 0 0 15px rgba(255,255,255,0.8); }
         
         /* BOTONERA LATERAL */
         .action-container { display: flex; flex-direction: column; gap: 8px; pointer-events: auto; align-items: flex-end; }
-        .btn-game { padding: 10px 14px; border-radius: 10px; border: none; color: white; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+        .btn-game { padding: 10px 14px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.5); text-transform: uppercase; }
         
         .gojo-grid { display: flex; gap: 6px; }
-        #btn-red { background: #ff0033; }
-        #btn-blue { background: #0044ff; }
-        #btn-purple { background: #9900ff; }
-        #btn-wand { background: #8b5a2b; border: 1px solid #ffaa00; }
+        #btn-red { background: #ff0033; box-shadow: 0 0 10px #ff0033; }
+        #btn-blue { background: #0044ff; box-shadow: 0 0 10px #0044ff; }
+        #btn-purple { background: #9900ff; box-shadow: 0 0 10px #9900ff; }
+        #btn-wand { background: #3a2212; border: 1px solid #ffaa00; }
         #btn-slow { background: #0088cc; }
 
         /* SELECCIÓN WAR OF WIZARDS */
-        #wow-menu { position: absolute; top: 15%; left: 15%; width: 70%; background: rgb(15, 8, 30); border: 3px solid #ffaa00; border-radius: 12px; padding: 15px; display: none; flex-direction: column; gap: 10px; z-index: 300; pointer-events: auto; color: white; text-align: center; box-sizing: border-box; }
+        #wow-menu { position: absolute; top: 15%; left: 15%; width: 70%; background: rgba(5, 3, 10, 0.98); border: 2px solid #ffaa00; border-radius: 12px; padding: 15px; display: none; flex-direction: column; gap: 10px; z-index: 300; pointer-events: auto; color: white; text-align: center; box-sizing: border-box; }
         .wow-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-wow { background: #222; border: 1px solid #555; color: white; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 12px; }
-        .btn-wow.selected { background: #ffaa00; color: black; }
+        .btn-wow { background: #111; border: 1px solid #444; color: white; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 12px; }
+        .btn-wow.selected { background: #ffaa00; color: black; box-shadow: 0 0 8px #ffaa00; }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
+    <div id="dreamcore-overlay"></div>
+
     <div id="html-ui">
         <div class="top-hud">
-            <div class="hud-card" id="connection-status">Detectando Red...</div>
-            <div class="hud-card" id="player-hp">Vida: 100%</div>
-            <div class="hud-card" id="spell-slots">Hechizos WoW: 0/3</div>
+            <div class="hud-card" id="connection-status">ONLINE</div>
+            <div class="hud-card" id="player-hp">ESTABILIDAD: 100%</div>
+            <div class="hud-card" id="spell-slots">WoW CARGAS: 0/3</div>
         </div>
         <div class="top-hud" style="justify-content: center;">
-            <div class="hud-card" id="time-slow-indicator">Tiempo Normal</div>
+            <div class="hud-card" id="time-slow-indicator" style="border-color: #0088cc;">DIMENSIÓN ESTABLE</div>
         </div>
     </div>
 
     <div id="wow-menu">
-        <h3 style="margin: 5px 0;">Elige 3 Hechizos (War of Wizards)</h3>
+        <h3 style="margin: 5px 0; letter-spacing: 1px;">SINTONIZAR ARCANOS (WoW)</h3>
         <div class="wow-options">
             <button class="btn-wow" onclick="selectWoWSpell('Bola de Fuego')">🔥 Fuego</button>
             <button class="btn-wow" onclick="selectWoWSpell('Rayo Relámpago')">⚡ Rayo</button>
             <button class="btn-wow" onclick="selectWoWSpell('Escudo Escarcha')">❄️ Escarcha</button>
             <button class="btn-wow" onclick="selectWoWSpell('Tormenta Arena')">⏳ Arena</button>
         </div>
-        <button class="btn-game" style="background: green; width: 100%;" onclick="confirmWoWSpells()">Equipar en Varita</button>
+        <button class="btn-game" style="background: #ffaa00; color: #000;" onclick="confirmWoWSpells()">Vincular a Varita</button>
     </div>
 
     <div id="mobile-controls">
@@ -71,72 +77,66 @@
         </div>
         
         <div class="action-container">
-            <button class="btn-game" id="btn-slow" onclick="triggerTimeSlow()">Ralentizar (5s)</button>
+            <button class="btn-game" id="btn-slow" onclick="triggerTimeSlow()">Ralentizar</button>
             <div class="gojo-grid">
                 <button class="btn-game" id="btn-red" onclick="castGojo('Rojo', '#ff0033')">Rojo</button>
                 <button class="btn-game" id="btn-blue" onclick="castGojo('Azul', '#0044ff')">Azul</button>
                 <button class="btn-game" id="btn-purple" onclick="castGojo('Púrpura', '#9900ff')">Púrpura</button>
             </div>
-            <button class="btn-game" id="btn-wand" onclick="openWandMenu()">Sacar Varita</button>
+            <button class="btn-game" id="btn-wand" onclick="openWandMenu()">Varita WoW</button>
             <div id="wow-cast-buttons" class="gojo-grid hidden"></div>
         </div>
     </div>
 
-    <a-scene cursor="rayOrigin: mouse" raycaster="objects: .clickable">
-        <a-assets>
-            <canvas id="space-bg" width="256" height="256"></canvas>
-        </a-assets>
-
+    <a-scene fog="type: exponential; color: #030208; density: 0.07" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+        
         <a-entity id="rig" position="0 0 0">
-            <a-camera id="camera" look-controls="magicWindowTrackingEnabled: false; touchEnabled: true" wasd-controls="acceleration: 30">
-                <a-entity geometry="primitive: ring; radiusInner: 0.002; radiusOuter: 0.004" material="color: #fff; shader: flat" position="0 0 -1"></a-entity>
+            <a-camera id="camera" look-controls="enabled: false" wasd-controls="enabled: false">
+                <a-entity geometry="primitive: ring; radiusInner: 0.0015; radiusOuter: 0.003" material="color: #ff0055; shader: flat" position="0 0 -1"></a-entity>
             </a-camera>
-            <a-entity oculus-touch-controls="hand: left"></a-entity>
-            <a-entity id="right-hand" oculus-touch-controls="hand: right"></a-entity>
         </a-entity>
 
         <a-entity id="main-menu">
-            <a-sky id="menu-sky" color="#03020a"></a-sky>
-            <a-entity id="ton618-sphere" geometry="primitive: sphere; radius: 12" material="color: #000; emissive: #15002b" position="0 15 -35" visible="false"></a-entity>
+            <a-sky color="#030208"></a-sky>
+            <a-entity id="ton618-sphere" geometry="primitive: sphere; radius: 10" material="color: #000; shader: flat" position="0 12 -30" visible="false"></a-entity>
 
-            <a-text value="MANNEQUIN (MENU MODIFICADO)" align="center" position="0 3.6 -4" width="9" color="#fff"></a-text>
-            <a-text id="network-3d" value="MODO: ONLINE" align="center" position="0 3.1 -4" width="4" color="#00ffcc"></a-text>
+            <a-text value="MANNEQUIN : ECHOES" align="center" position="0 3.5 -4" width="8" color="#fff" font="monoid"></a-text>
 
-            <a-entity id="btn-mode1" class="clickable" geometry="primitive: box; width: 2.2; height: 0.5; depth: 0.1" material="color: #121225" position="-1.3 2.1 -3" onclick="loadMap('evasion')">
-                <a-text value="Modo Evasión" align="center" position="0 0 0.06" width="4.5"></a-text>
+            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #0d0c14" position="-1.2 2 -3" onclick="loadMap('evasion')">
+                <a-text value="Modo Evasion" align="center" position="0 0 0.06" width="4"></a-text>
             </a-entity>
 
-            <a-entity id="btn-mode2" class="clickable" geometry="primitive: box; width: 2.2; height: 0.5; depth: 0.1" material="color: #121225" position="1.3 2.1 -3" onclick="loadMap('entorno')">
-                <a-text value="Modo Entorno" align="center" position="0 0 0.06" width="4.5"></a-text>
+            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #0d0c14" position="1.2 2 -3" onclick="loadMap('entorno')">
+                <a-text value="Modo Entorno" align="center" position="0 0 0.06" width="4"></a-text>
             </a-entity>
 
-            <a-entity id="btn-solitario" class="clickable" geometry="primitive: box; width: 2.2; height: 0.5; depth: 0.1" material="color: #0a2f1d" position="-1.3 1.3 -3" onclick="loadMap('solitario')">
-                <a-text value="Solitario Local" align="center" position="0 0 0.06" width="4.5"></a-text>
+            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #07170f" position="-1.2 1.3 -3" onclick="loadMap('solitario')">
+                <a-text value="Solitario Local" align="center" position="0 0 0.06" width="4"></a-text>
             </a-entity>
 
-            <a-entity id="btn-online" class="clickable" geometry="primitive: box; width: 2.2; height: 0.5; depth: 0.1" material="color: #0f1c3f" position="1.3 1.3 -3" onclick="alert('Buscando servidores...')">
-                <a-text value="Modo Online" align="center" position="0 0 0.06" width="4.5"></a-text>
+            <a-entity class="clickable" geometry="primitive: box; width: 2; height: 0.4; depth: 0.1" material="color: #060e22" position="1.2 1.3 -3" onclick="alert('Buscando espacio liminal...')">
+                <a-text value="Modo Online" align="center" position="0 0 0.06" width="4"></a-text>
             </a-entity>
 
-            <a-entity id="btn-bossfight" class="clickable" geometry="primitive: box; width: 3.2; height: 0.6; depth: 0.1" material="color: #660011" position="0 0.4 -3" visible="false" onclick="loadMap('bossfight')">
-                <a-text value="BOSS FIGHT" align="center" position="0 0 0.06" width="5" color="#fff"></a-text>
+            <a-entity id="btn-bossfight" class="clickable" geometry="primitive: box; width: 3; height: 0.5; depth: 0.1" material="color: #40000a" position="0 0.4 -3" visible="false" onclick="loadMap('bossfight')">
+                <a-text value="BOSS FIGHT" align="center" position="0 0 0.06" width="4.5" color="#fff"></a-text>
             </a-entity>
         </a-entity>
 
         <a-entity id="game-world" visible="false">
-            <a-sky color="#010003"></a-sky>
-            <a-grid material="color: #1b1d22; metalness: 0.6; roughness: 0.4"></a-grid>
-            <a-light type="ambient" color="#222233"></a-light>
-            <a-light id="flashlight" type="spot" color="#fff" intensity="2" position="0 2.5 0" angle="30"></a-light>
+            <a-sky color="#030208"></a-sky>
+            <a-grid material="color: #0f0e15; roughness: 0.2; metalness: 0.8; repeat: 50 50"></a-grid>
+            <a-light type="ambient" color="#0a0a16"></a-light>
+            <a-light id="flashlight" type="spot" color="#fff" intensity="2.5" position="0 2 0" angle="24" penumbra="0.6"></a-light>
 
             <a-entity id="map-structures"></a-entity>
 
-            <a-entity id="boss-container" position="0 4 -22" visible="false">
-                <a-sphere id="boss-core" radius="3.5" material="color: #000"></a-sphere>
-                <a-ring id="boss-eye" radius-inner="1.8" radius-outer="2.5" material="color: #ff0055; side: double"></a-ring>
+            <a-entity id="boss-container" position="0 4 -25" visible="false">
+                <a-sphere radius="4" material="color: #000; roughness: 1"></a-sphere>
+                <a-ring id="boss-eye" radius-inner="2" radius-outer="2.8" material="color: #ff0044; shader: flat; side: double"></a-ring>
             </a-entity>
 
-            <a-text id="game-prompt" value="" align="center" position="0 3.5 -6" width="5.5"></a-text>
+            <a-text id="game-prompt" value="" align="center" position="0 3.2 -5" width="5" color="#fff"></a-text>
         </a-entity>
     </a-scene>
 
@@ -148,18 +148,56 @@
         let eyeOpen = false;
 
         const rig = document.getElementById('rig');
+        const camera = document.getElementById('camera');
         const knob = document.getElementById('joystick-knob');
         const boundary = document.getElementById('joystick-boundary');
+        
         let moveX = 0, moveZ = 0;
         let isDraggingJoystick = false;
 
-        // Mostrar controles si es celular
+        // Variables para mirar libremente deslizando en pantalla (Eje X e Y arreglados)
+        let rotY = 0;
+        let rotX = 0;
+        let isMovingCamera = false;
+        let prevTouchX = 0;
+        let prevTouchY = 0;
+
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         if (isMobile) document.getElementById('mobile-controls').style.display = 'flex';
 
-        // PROGRAMACIÓN CORRECTA DEL JOYSTICK (DIRECCIONES ARREGLADAS)
-        boundary.addEventListener('touchstart', (e) => { isDraggingJoystick = true; updateJoystick(e.touches[0]); });
-        window.addEventListener('touchmove', (e) => { if (isDraggingJoystick) updateJoystick(e.touches[0]); });
+        // LECTOR TÁCTIL PERSONALIZADO PARA ROTACIÓN TOTAL DE PANTALLA
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches[0].clientX > window.innerWidth / 2 || currentMode === 'menu') {
+                isMovingCamera = true;
+                prevTouchX = e.touches[0].clientX;
+                prevTouchY = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isMovingCamera) {
+                let touch = e.touches[0];
+                let diffX = touch.clientX - prevTouchX;
+                let diffY = touch.clientY - prevTouchY;
+
+                rotY -= diffX * 0.25; // Sensibilidad Horizontal
+                rotX -= diffY * 0.25; // Sensibilidad Vertical REESTABLECIDA
+                
+                // Límite para no dar la vuelta completa verticalmente de cabeza
+                rotX = Math.max(-75, Math.min(75, rotX));
+
+                camera.setAttribute('rotation', `${rotX} ${rotY} 0`);
+
+                prevTouchX = touch.clientX;
+                prevTouchY = touch.clientY;
+            }
+        });
+
+        window.addEventListener('touchend', () => { isMovingCamera = false; });
+
+        // SISTEMA DEL JOYSTICK DIRECCIONAL CORREGIDO
+        boundary.addEventListener('touchstart', (e) => { e.stopPropagation(); isDraggingJoystick = true; updateJoystick(e.touches[0]); });
+        window.addEventListener('touchmove', (e) => { if (isDraggingJoystick) { e.stopPropagation(); updateJoystick(e.touches[0]); } });
         window.addEventListener('touchend', () => {
             isDraggingJoystick = false;
             knob.style.top = '32px'; knob.style.left = '32px';
@@ -183,19 +221,16 @@
             knob.style.left = `${32 + deltaX}px`;
             knob.style.top = `${32 + deltaY}px`;
             
-            // Corrección matemática de inversión de ejes
             moveX = deltaX / maxRadius;
             moveZ = deltaY / maxRadius;
         }
 
-        // Bucle de movimiento fluido relativo al Rig completo del personaje
+        // BUCLE DE MOVIMIENTO EN BASE A LA DIRECCIÓN EXACTA DE LA VISTA
         setInterval(() => {
             if ((moveX !== 0 || moveZ !== 0) && currentMode !== 'menu') {
                 let speed = timeSlowed ? 0.03 : 0.09;
-                const cameraRotation = document.getElementById('camera').getAttribute('rotation');
-                const angle = cameraRotation.y * (Math.PI / 180);
+                const angle = rotY * (Math.PI / 180);
                 
-                // Mapeo corregido de coordenadas espaciales
                 let forwardX = Math.sin(angle) * moveZ;
                 let forwardZ = Math.cos(angle) * moveZ;
                 let sideX = Math.cos(angle) * moveX;
@@ -208,16 +243,47 @@
             }
         }, 20);
 
-        // FUNCIONES DE WAR OF WIZARDS
+        // SISTEMA DE COMBATE DINÁMICO (DESDE TU POSICIÓN DINÁMICA ACTUAL)
+        function spawnMagicSphere(color, radius, speed) {
+            const sphere = document.createElement('a-sphere');
+            sphere.setAttribute('radius', radius);
+            sphere.setAttribute('color', color);
+            sphere.setAttribute('material', 'emissive', color);
+            sphere.setAttribute('material', 'roughness', 0.1);
+
+            // IMPORTANTE: Captura las coordenadas reales del personaje en movimiento
+            let playerPos = rig.getAttribute('position');
+            let angleRad = rotY * (Math.PI / 180);
+            let pitchRad = rotX * (Math.PI / 180);
+
+            // Geometría espacial vectorizada para lanzar el proyectil hacia donde apunte la mirada
+            let startX = playerPos.x - Math.sin(angleRad) * 1.2;
+            let startY = 1.3 - Math.sin(pitchRad) * 1.2;
+            let startZ = playerPos.z - Math.cos(angleRad) * 1.2;
+
+            let targetX = playerPos.x - Math.sin(angleRad) * 30;
+            let targetY = 1.3 - Math.sin(pitchRad) * 30;
+            let targetZ = playerPos.z - Math.cos(angleRad) * 30;
+
+            sphere.setAttribute('position', `${startX} ${startY} ${startZ}`);
+            sphere.setAttribute('animation', `property: position; from: ${startX} ${startY} ${startZ}; to: ${targetX} ${targetY} ${targetZ}; dur: ${speed}; easing: linear`);
+            
+            document.getElementById('game-world').appendChild(sphere);
+        }
+
+        function castGojo(type, color) {
+            let radius = type === 'Púrpura' ? 0.8 : 0.28;
+            spawnMagicSphere(color, radius, type === 'Púrpura' ? 500 : 1100);
+        }
+
+        // FUNCIONES COMPLEMENTARIAS WAR OF WIZARDS
         function openWandMenu() { document.getElementById('wow-menu').style.display = 'flex'; }
         
         function selectWoWSpell(name) {
             const idx = selectedWoW.indexOf(name);
             if (idx > -1) selectedWoW.splice(idx, 1);
-            else {
-                if (selectedWoW.length >= 3) return;
-                selectedWoW.push(name);
-            }
+            else { if (selectedWoW.length >= 3) return; selectedWoW.push(name); }
+            
             const buttons = document.querySelectorAll('.btn-wow');
             buttons.forEach(b => {
                 if(selectedWoW.includes(b.innerText.split(' ')[1])) b.classList.add('selected');
@@ -226,41 +292,23 @@
         }
 
         function confirmWoWSpells() {
-            if(selectedWoW.length !== 3) { alert("¡Selecciona 3!"); return; }
+            if(selectedWoW.length !== 3) return alert("Elige 3 hechizos.");
             document.getElementById('wow-menu').style.display = 'none';
-            document.getElementById('btn-wand').innerText = "Varita Lista";
+            document.getElementById('btn-wand').innerText = "Cargado";
             document.getElementById('spell-slots').innerText = `WoW: 3/3`;
 
             const container = document.getElementById('wow-cast-buttons');
             container.innerHTML = ''; container.classList.remove('hidden');
             selectedWoW.forEach(spell => {
                 const btn = document.createElement('button');
-                btn.className = 'btn-game'; btn.style.background = '#8b5a2b';
+                btn.className = 'btn-game'; btn.style.background = '#3a2212';
                 btn.innerText = spell;
-                btn.onclick = () => { spawnMagicSphere('#ffaa00', 0.3, 1200); };
+                btn.onclick = () => { spawnMagicSphere('#ff9900', 0.25, 1000); };
                 container.appendChild(btn);
             });
         }
 
-        function castGojo(type, color) {
-            let radius = type === 'Púrpura' ? 0.7 : 0.25;
-            spawnMagicSphere(color, radius, type === 'Púrpura' ? 600 : 1200);
-        }
-
-        function spawnMagicSphere(color, radius, speed) {
-            const sphere = document.createElement('a-sphere');
-            sphere.setAttribute('radius', radius);
-            sphere.setAttribute('color', color);
-            sphere.setAttribute('material', 'emissive', color);
-            
-            // El hechizo sale de la posición del Rig de tu personaje, no del vacío
-            let pPos = rig.getAttribute('position');
-            sphere.setAttribute('position', `${pPos.x} 1.2 ${pPos.z - 1.5}`);
-            sphere.setAttribute('animation', `property: position; to: ${pPos.x} 1.2 ${pPos.z - 30}; dur: ${speed}; easing: linear`);
-            document.getElementById('game-world').appendChild(sphere);
-        }
-
-        // CONSTRUCCIÓN E INSTANCIACIÓN DEL MAPA Y LOS MANNEQUINS
+        // CONSTRUCCIÓN ESTILIZADA DE ENTORNO EN ALTA CALIDAD Y MANNEQUINS REALES
         function loadMap(mode) {
             currentMode = mode;
             document.getElementById('main-menu').setAttribute('visible', 'false');
@@ -269,22 +317,38 @@
             const container = document.getElementById('map-structures');
             container.innerHTML = ''; 
 
-            // Estructura física real del mapa
-            createWall(container, "0 2.5 -15", "16 5 0.5", "#2e3138"); 
-            createWall(container, "-8 2.5 -7", "0.5 5 15", "#2e3138");
-            createWall(container, "8 2.5 -7", "0.5 5 15", "#2e3138");
-            createWall(container, "-3 2.5 -6", "1.5 5 1.5", "#424651");
-            createWall(container, "3 2.5 -10", "2 5 2", "#424651");
+            // Paredes monolíticas de concreto reflectante fotorrealistas
+            createWall(container, "0 3 -18", "20 6 0.8", "#121118"); 
+            createWall(container, "-10 3 -8", "0.8 6 20", "#121118");
+            createWall(container, "10 3 -8", "0.8 6 20", "#121118");
+            createWall(container, "-4 3 -7", "2 6 2", "#191822");
+            createWall(container, "4 3 -12", "2.5 6 2.5", "#191822");
 
-            // RENDERIZADO VISIBLE DE LOS MANNEQUINS EN EL MAPA
             if(mode !== 'bossfight') {
-                document.getElementById('game-prompt').setAttribute('value', "Los Mannequins se ocultan en las columnas.");
-                for(let i=0; i<4; i++) {
-                    const mannequin = document.createElement('a-box');
-                    mannequin.setAttribute('position', `${(Math.random() * 8) - 4} 0.9 -${8 + (i*2.5)}`);
-                    mannequin.setAttribute('geometry', 'width: 0.6; height: 1.8; depth: 0.5');
-                    mannequin.setAttribute('material', 'color: #8c8c8c; roughness: 0.9; metalness: 0.2');
-                    container.appendChild(mannequin);
+                document.getElementById('game-prompt').setAttribute('value', "ESPACIO LIMINAL DETECTADO.\nCuidado con las figuras estáticas.");
+                
+                // INSERCIÓN DE MODELOS ANATÓMICOS DE MANNEQUINS ORIGINALES MEDIANTE PRIMITIVAS
+                for(let i=0; i<3; i++) {
+                    const group = document.createElement('a-entity');
+                    group.setAttribute('position', `${(Math.random() * 8) - 4} 0 -${9 + (i * 3.5)}`);
+                    
+                    // Base/Piernas
+                    const legs = document.createElement('a-cylinder');
+                    legs.setAttribute('radius', '0.15'); legs.setAttribute('height', '1.0'); legs.setAttribute('color', '#a1a1a1');
+                    legs.setAttribute('position', '0 0.5 0'); legs.setAttribute('material', 'roughness: 0.1; metalness: 0.7');
+                    
+                    // Torso Anatómicamente correcto
+                    const torso = document.createElement('a-box');
+                    torso.setAttribute('width', '0.5'); torso.setAttribute('height', '0.7'); torso.setAttribute('depth', '0.3');
+                    torso.setAttribute('color', '#bcbcbc'); torso.setAttribute('position', '0 1.3 0'); torso.setAttribute('material', 'roughness: 0.1; metalness: 0.7');
+                    
+                    // Cabeza de Maniquí sin rostro
+                    const head = document.createElement('a-sphere');
+                    head.setAttribute('radius', '0.18'); head.setAttribute('color', '#d6d6d6'); head.setAttribute('position', '0 1.8 0');
+                    head.setAttribute('material', 'roughness: 0.05; metalness: 0.8');
+
+                    group.appendChild(legs); group.appendChild(torso); group.appendChild(head);
+                    container.appendChild(group);
                 }
             } else {
                 document.getElementById('boss-container').setAttribute('visible', 'true');
@@ -296,7 +360,7 @@
             const w = document.createElement('a-box');
             w.setAttribute('position', pos);
             w.setAttribute('geometry', `width: ${size.split(' ')[0]}; height: ${size.split(' ')[1]}; depth: ${size.split(' ')[2]}`);
-            w.setAttribute('material', `color: ${color}`);
+            w.setAttribute('material', `color: ${color}; roughness: 0.1; metalness: 0.6`);
             parent.appendChild(w);
         }
 
@@ -307,44 +371,41 @@
                 eyeOpen = !eyeOpen;
                 if(eyeOpen) {
                     eye.setAttribute('material', 'color', '#ff0033');
-                    document.getElementById('game-prompt').setAttribute('value', "👁️ ¡EL OJO TE MIRA! ¡ESCÓNDETE DETRÁS DE UN BLOQUE!");
+                    document.getElementById('game-prompt').setAttribute('value', "👁️ EL OJO OBSERVADOR SE HA ABIERTO");
                     setTimeout(() => {
-                        if(eyeOpen && Math.abs(rig.getAttribute('position').x) < 1.5) {
+                        if(eyeOpen && Math.abs(rig.getAttribute('position').x) < 1.8) {
                             playerHP -= 20;
-                            document.getElementById('player-hp').innerText = `Vida: ${playerHP}%`;
-                            if(playerHP <= 0) { alert("Game Over"); location.reload(); }
+                            document.getElementById('player-hp').innerText = `ESTABILIDAD: ${playerHP}%`;
+                            if(playerHP <= 0) { alert("CONEXIÓN PERDIDA"); location.reload(); }
                         }
-                    }, 1000);
+                    }, 1100);
                 } else {
-                    eye.setAttribute('material', 'color', '#220005');
-                    document.getElementById('game-prompt').setAttribute('value', "🔮 El ojo se cerró. ¡Ataca!");
+                    eye.setAttribute('material', 'color', '#100005');
+                    document.getElementById('game-prompt').setAttribute('value', "🔮 ENERGÍA RECARGANDO. EJECUTA CONJUROS.");
                 }
-            }, 3000);
+            }, 3200);
         }
 
         function triggerTimeSlow() {
             if (!timeSlowed) {
                 timeSlowed = true;
-                document.getElementById('time-slow-indicator').innerText = "⏱️ TIEMPO LENTO";
-                setTimeout(() => {
-                    timeSlowed = false;
-                    document.getElementById('time-slow-indicator').innerText = "Tiempo Normal";
-                }, 5000);
+                document.getElementById('time-slow-indicator').innerText = "⏱️ ALTERACIÓN CRONOLÓGICA";
+                setTimeout(() => { timeSlowed = false; document.getElementById('time-slow-indicator').innerText = "DIMENSIÓN ESTABLE"; }, 5000);
             }
         }
 
-        // CONDICIÓN ESTRICTA DE APARICIÓN DE TON 618 (1 ENTRE 5)
+        // LÓGICA ESTRICTA DE ACTIVACIÓN DE DADO DE PROBABILIDAD (1 ENTRE 5)
         window.addEventListener('load', () => {
             const dice = Math.floor(Math.random() * 5) + 1;
-            console.log("Número del dado obtenido: " + dice);
-            
             if (dice === 5) {
                 document.getElementById('ton618-sphere').setAttribute('visible', 'true');
-                document.getElementById('btn-bossfight').setAttribute('visible', 'true'); // Ahora sí aparece solo si cumple el 1 de 5
+                document.getElementById('btn-bossfight').style.display = 'block'; // Solo se renderiza si cae en 5 obligatoriamente
+            } else {
+                document.getElementById('btn-bossfight').style.display = 'none';
             }
-            
-            document.getElementById('connection-status').innerText = navigator.onLine ? "🌐 Online" : "⚠️ Offline";
+            document.getElementById('connection-status').innerText = navigator.onLine ? "CONECTADO" : "LOCAL";
         });
     </script>
 </body>
 </html>
+
